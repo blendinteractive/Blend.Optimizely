@@ -16,8 +16,13 @@ steps:
     packageType: 'sdk'
     version: '6.0.x'
 
-- task: NuGetCommand@2
+- task: DotNetCoreCLI@2
   inputs:
-    command: pack
+    command: 'build'
+    projects: '*.csproj'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'pack'
     packagesToPack: '**/*.csproj'
-    packDestination: '$(Build.ArtifactStagingDirectory)'
+    versioningScheme: 'off'
