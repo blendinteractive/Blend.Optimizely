@@ -3,6 +3,8 @@ using EPiServer.Core;
 using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 
 namespace Blend.Optimizely

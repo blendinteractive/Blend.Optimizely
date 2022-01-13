@@ -1,5 +1,7 @@
 ﻿using EPiServer.Framework.Localization;
+using System;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace Blend.Optimizely

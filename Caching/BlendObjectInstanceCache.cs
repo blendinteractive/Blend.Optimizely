@@ -1,4 +1,5 @@
 ﻿using EPiServer.Framework.Cache;
+using System;
 
 namespace Blend.Optimizely.Caching
 {

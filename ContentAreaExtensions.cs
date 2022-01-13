@@ -1,6 +1,8 @@
 ﻿using EPiServer;
 using EPiServer.Core;
 using EPiServer.ServiceLocation;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Blend.Optimizely
 {

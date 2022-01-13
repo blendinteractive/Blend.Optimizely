@@ -1,4 +1,8 @@
-﻿namespace Blend.Optimizely.Search
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Blend.Optimizely.Search
 {
     public class GroupPaginationModel
     {

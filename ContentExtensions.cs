@@ -3,6 +3,7 @@ using EPiServer.Core;
 using EPiServer.ServiceLocation;
 using EPiServer.Web.Routing;
 using Microsoft.AspNetCore.Routing;
+using System.Linq;
 
 namespace Blend.Optimizely
 {
