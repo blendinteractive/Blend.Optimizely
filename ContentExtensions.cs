@@ -1,18 +1,10 @@
 ﻿using EPiServer;
 using EPiServer.Core;
-using EPiServer.Core.Internal;
-using EPiServer.DataAbstraction;
 using EPiServer.ServiceLocation;
 using EPiServer.Web.Routing;
 using Microsoft.AspNetCore.Routing;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Blend.Episerver
+namespace Blend.Optimizely
 {
     public static class ContentExtensions
     {

@@ -1,8 +1,6 @@
 ﻿using EPiServer.Shell.ObjectEditing;
-using System;
-using System.Collections.Generic;
 
-namespace Blend.Episerver.EditorDescriptors
+namespace Blend.Optimizely.EditorDescriptors
 {
     public class EnumSelectionFactory<TEnum> : ISelectionFactory
     {

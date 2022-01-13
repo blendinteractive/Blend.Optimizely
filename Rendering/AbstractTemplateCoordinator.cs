@@ -2,7 +2,7 @@
 using EPiServer.Framework.Web;
 using EPiServer.Web.Mvc;
 
-namespace Blend.Episerver.Rendering
+namespace Blend.Optimizely.Rendering
 {
     public abstract class AbstractTemplateCoordinator : IViewTemplateModelRegistrator
     {

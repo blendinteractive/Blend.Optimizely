@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Blend.Episerver.Search
+﻿namespace Blend.Optimizely.Search
 {
     public class PaginationModel
     {

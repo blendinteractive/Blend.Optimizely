@@ -4,17 +4,12 @@ using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Framework.Blobs;
 using EPiServer.Scheduler;
-using EPiServer.Security;
 using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
-namespace Blend.Episerver.ScheduledJobs
+namespace Blend.Optimizely.ScheduledJobs
 {
     public abstract class BlendJobBase : ScheduledJobBase
     {

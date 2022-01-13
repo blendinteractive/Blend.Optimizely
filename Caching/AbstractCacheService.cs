@@ -1,7 +1,6 @@
 ﻿using EPiServer.Framework.Cache;
-using System;
 
-namespace Blend.Episerver.Caching
+namespace Blend.Optimizely.Caching
 {
     public abstract class AbstractCacheService : ICacheService
     {

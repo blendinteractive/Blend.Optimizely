@@ -1,10 +1,8 @@
 ﻿using EPiServer;
 using EPiServer.Core;
 using EPiServer.SpecializedProperties;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Blend.Episerver
+namespace Blend.Optimizely
 {
     public static class HasValueExtensions
     {

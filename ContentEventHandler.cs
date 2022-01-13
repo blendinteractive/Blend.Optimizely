@@ -4,7 +4,7 @@ using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.ServiceLocation;
 
-namespace Blend.Episerver
+namespace Blend.Optimizely
 {
     [InitializableModule]
     [ModuleDependency(typeof(EPiServer.Web.InitializationModule))]

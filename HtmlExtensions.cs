@@ -1,21 +1,12 @@
-﻿using EPiServer;
-using EPiServer.Editor;
-using EPiServer.SpecializedProperties;
-using EPiServer.Web.Internal;
-using EPiServer.Web.Routing;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Web;
-using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using EPiServer.ServiceLocation;
+﻿using EPiServer.ServiceLocation;
 using EPiServer.Web;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Linq.Expressions;
 
-namespace Blend.Episerver
+namespace Blend.Optimizely
 {
     public static class HtmlExtensions
     {
