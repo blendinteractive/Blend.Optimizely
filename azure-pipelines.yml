@@ -17,11 +17,13 @@ steps:
     version: '6.0.x'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Dotnet Build'
   inputs:
     command: 'build'
     projects: '*.csproj'
 
 - task: DotNetCoreCLI@2
+  displayName: 'Dotnet Pack'
   inputs:
     command: 'pack'
     packagesToPack: '**/*.csproj'
