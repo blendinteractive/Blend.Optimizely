@@ -9,7 +9,7 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-- task: UseDotNet@2
+task: UseDotNet@2
   displayName: Use .NET 6.0
   inputs:
     packageType: 'sdk'
