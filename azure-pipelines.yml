@@ -9,7 +9,15 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
-
 steps:
-- script: dotnet pack Blend.Optimizely.csproj -c Release
-  displayName: 'Package Project'
+- task: UseDotNet@2
+  displayName: Use .NET 6.0
+  inputs:
+    packageType: 'sdk'
+    version: '6.0.x'
+
+- task: NuGetCommand@2
+  inputs:
+    command: pack
+    packagesToPack: '**/*.csproj'
+    packDestination: '$(Build.ArtifactStagingDirectory)'
