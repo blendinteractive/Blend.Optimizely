@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.0.1</Version>
+    <Version>2.0.2</Version>
     <Authors>Blend Interactive</Authors>
     <Company>Blend Interactive</Company>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
