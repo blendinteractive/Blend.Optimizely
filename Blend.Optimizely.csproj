@@ -13,7 +13,9 @@
     <LangVersion>Latest</LangVersion>
     <!-- NuGet Package Information -->
     <PackageId>Blend.Optimizely</PackageId>
-    <PackageProjectUrl>https://github.com/blendinteractive/blend.optimizely</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/blendinteractive/Blend.Optimizely</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/blendinteractive/Blend.Optimizely.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <PackageTags>Optimizely</PackageTags>
     <IsPackable>true</IsPackable>
     <Description>Collection of helpful utilities for Optimizely CMS 12 sites</Description>
