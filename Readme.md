@@ -24,7 +24,7 @@ This is a collection of helpers and utility classes used in our Optimizely sites
 
 A convenience layer and abstraction around `ISynchronizedObjectInstanceCache`.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Blend%20Cache%20-%20Documenation%20Request&Body=)
+[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Blend%20Cache%20-%20Documentation%20Request&Body=)
 
 ### Enum Selection Factory
 
@@ -43,18 +43,18 @@ public enum DisplaySettings
 
 A convenience class for making registering templates simple.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Abstract%20Template%20Coordinator%20-%20Documenation%20Request&Body=)
+[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Abstract%20Template%20Coordinator%20-%20Documentation%20Request&Body=)
 
 ### Schedule Job Base
 
 A convenient base class for scheduled jobs.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Scheduled%20Job%20Base%20-%20Documenation%20Request&Body=)
+[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Scheduled%20Job%20Base%20-%20Documentation%20Request&Body=)
 
 
 ### Pagination Model
 
 A simple model for calcuating pagination.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Pagination%20-%20Documenation%20Request&Body=)
+[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Pagination%20-%20Documentation%20Request&Body=)
 

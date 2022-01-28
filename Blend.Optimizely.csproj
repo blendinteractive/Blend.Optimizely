@@ -4,7 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.0.3</Version>
+    <Version>2.0.4</Version>
     <Authors>Blend Interactive</Authors>
     <Company>Blend Interactive</Company>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
@@ -18,6 +18,13 @@
     <IsPackable>true</IsPackable>
     <Description>Collection of helpful utilities for Optimizely CMS 12 sites</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include=".github\ISSUE_TEMPLATE\bug_report.md" />
+    <None Include=".github\ISSUE_TEMPLATE\documentation_request.md" />
+    <None Include=".github\ISSUE_TEMPLATE\feature_request.md" />
+    <None Include=".github\workflows\main.yml" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="EPiServer.CMS" Version="12.0.2" />

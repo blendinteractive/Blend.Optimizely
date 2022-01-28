@@ -1,0 +1,25 @@
+name: Update NuGet
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    name: Update NuGet 
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.x'
+      - name: Build Package
+        run:
+          dotnet build -c Release "./Blend.Optmizely.csproj"
+      - name: Package Release
+        run:
+          dotnet pack -c Release --no-build -o out "./Blend.Optmizely.csproj"
+      - name: Publish Nuget to GitHub registry
+        run: ls .\out\*.nupkg | foreach { dotnet nuget push $_ -s https://nuget.pkg.github.com/blendinteractive/index.json -k $env:GITHUB_TOKEN }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+
