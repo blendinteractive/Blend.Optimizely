@@ -14,10 +14,10 @@ jobs:
           dotnet-version: '5.0.x'
       - name: Build Package
         run:
-          dotnet build -c Release "./Blend.Optmizely.csproj"
+          dotnet build -c Release "./Blend.Optimizely.csproj"
       - name: Package Release
         run:
-          dotnet pack -c Release --no-build -o out "./Blend.Optmizely.csproj"
+          dotnet pack -c Release --no-build -o out "./Blend.Optimizely.csproj"
       - name: Publish Nuget to GitHub registry
         run: ls .\out\*.nupkg | foreach { dotnet nuget push $_ -s https://nuget.pkg.github.com/blendinteractive/index.json -k $env:GITHUB_TOKEN }
         env:
