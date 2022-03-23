@@ -1,9 +1,9 @@
 ﻿using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using Microsoft.AspNetCore.Html;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq.Expressions;
 
@@ -13,39 +13,43 @@ namespace Blend.Optimizely
     {
         #region Property
 
-        public static HtmlString PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName) =>
+        public static IHtmlContent PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName) =>
             PropertyTemplateFor(model, expression, htmlTagName, null);
 
-        public static HtmlString PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName, object htmlAttributes) =>
+        public static IHtmlContent PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName, object? htmlAttributes) =>
             PropertyTemplateFor(model, expression, htmlTagName, string.Empty, htmlAttributes);
 
-
-        public static HtmlString PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName, string innerHtmlTagName, object htmlAttributes)
+        public static IHtmlContent PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TResult>> expression, string htmlTagName, string innerHtmlTagName, object? htmlAttributes)
         {
-            var modelExpressionProvider = ServiceLocator.Current.GetInstance<ModelExpressionProvider>();
-            var metadata = modelExpressionProvider.CreateModelExpression(model.ViewData, expression);
-            var hasValue = metadata.Model != null;
+            ModelExpression modelExpression = html.ViewContext.HttpContext.RequestServices.GetRequiredService<ModelExpressionProvider>().CreateModelExpression(html.ViewData, expression);
+
+            var hasValue = modelExpression.Model != null;
+
+            var displayFor = html.DisplayFor(expression);
 
             var contextModeResolver = ServiceLocator.Current.GetInstance<IContextModeResolver>();
+
             // edit mode (with or without value)
             if (contextModeResolver.CurrentMode == ContextMode.Edit)
             {
-                return RenderPropertyForEditMode(htmlTagName, innerHtmlTagName, htmlAttributes, metadata.Metadata);
+                return RenderPropertyForEditMode(htmlTagName, innerHtmlTagName, htmlAttributes, modelExpression.Metadata.PropertyName, displayFor);
             }
+
             // view mode with value
             if (hasValue)
             {
-                return RenderPropertyForViewMode(htmlTagName, innerHtmlTagName, htmlAttributes, metadata.Metadata);
+                return RenderPropertyForViewMode(htmlTagName, innerHtmlTagName, htmlAttributes, displayFor);
             }
+
             // view mode without value
             return HtmlString.Empty;
         }
 
-        private static HtmlString RenderPropertyForEditMode(string tagName, string innerTagName, object htmlAttributes, ModelMetadata metadata)
+        private static IHtmlContent RenderPropertyForEditMode(string tagName, string innerTagName, object? htmlAttributes, string propertyName, IHtmlContent content)
         {
             var tagBuilder = new TagBuilder(tagName.Coalesce("span"));
 
-            tagBuilder.MergeAttribute("data-epi-property-name", metadata.PropertyName);
+            tagBuilder.MergeAttribute("data-epi-property-name", propertyName);
             tagBuilder.MergeAttribute("data-epi-use-mvc", "True");
 
             if (htmlAttributes != null)
@@ -54,26 +58,22 @@ namespace Blend.Optimizely
                 tagBuilder.MergeAttributes(attributes);
             }
 
-            var hasValue = metadata != null;
-            if (innerTagName.HasValue())
+            var hasValue = content?.ToString() != null;
+            if (innerTagName.HasValue() && hasValue)
             {
-                if (hasValue)
-                {
-                    var innerTagBuilder = new TagBuilder(innerTagName);
-                    innerTagBuilder.InnerHtml.AppendHtml(metadata.ToString());
-                    tagBuilder.InnerHtml.AppendHtml(innerTagBuilder.ToString());
-                }
+                var innerTagBuilder = new TagBuilder(innerTagName);
+                innerTagBuilder.InnerHtml.AppendHtml(content);
+                tagBuilder.InnerHtml.AppendHtml(innerTagBuilder);
             }
-            else
+            else if (hasValue)
             {
-                if (hasValue)
-                    tagBuilder.InnerHtml.AppendHtml(metadata.ToString());
+                tagBuilder.InnerHtml.AppendHtml(content);
             }
 
-            return new HtmlString(tagBuilder.ToString());
+            return tagBuilder;
         }
 
-        private static HtmlString RenderPropertyForViewMode(string tagName, string innerTagName, object htmlAttributes, ModelMetadata metadata)
+        private static IHtmlContent RenderPropertyForViewMode(string tagName, string innerTagName, object? htmlAttributes, IHtmlContent content)
         {
             var tagBuilder = new TagBuilder(tagName.Coalesce("span"));
 
@@ -86,24 +86,24 @@ namespace Blend.Optimizely
             if (innerTagName.HasValue())
             {
                 var innerTagBuilder = new TagBuilder(innerTagName);
-                innerTagBuilder.InnerHtml.AppendHtml(metadata.ToString());
-                tagBuilder.InnerHtml.AppendHtml(innerTagBuilder.ToString());
+                innerTagBuilder.InnerHtml.AppendHtml(content);
+                tagBuilder.InnerHtml.AppendHtml(innerTagBuilder);
             }
             else
-                tagBuilder.InnerHtml.AppendHtml(metadata.ToString());
+            {
+                tagBuilder.InnerHtml.AppendHtml(content);
+            }
 
-            return new HtmlString(tagBuilder.ToString());
+            return tagBuilder;
         }
 
         #endregion Property
 
         public static string GetString(this IHtmlContent content)
         {
-            using (var writer = new System.IO.StringWriter())
-            {
-                content.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
-                return writer.ToString();
-            }
+            using var writer = new System.IO.StringWriter();
+            content.WriteTo(writer, System.Text.Encodings.Web.HtmlEncoder.Default);
+            return writer.ToString();
         }
     }
 }
