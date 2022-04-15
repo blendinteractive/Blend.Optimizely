@@ -18,15 +18,93 @@ This is a collection of helpers and utility classes used in our Optimizely sites
 1. Send a pull request and bug the maintainer until it gets merged and published.
 1. Make sure to add yourself to CONTRIBUTORS.txt.
 
-## Features
+# Popular Features
 
-### Blend Object Instance Cache
+## EnumSelectionFactory
 
-A convenience layer and abstraction around `ISynchronizedObjectInstanceCache`.
+Usage:
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Blend%20Cache%20-%20Documentation%20Request&Body=)
+```
+[SelectOne(SelectionFactoryType = typeof(EnumSelectionFactory<ImageSizes>))]
+public virtual ImageSizes ImageSize { get; set; }
+// ...
+public enum ImageSizes {
+    Narrow,
+    [Description("Standard Width")]
+    StandardWidth,
+    Wide,
+}
+```
 
-### Enum Selection Factory
+## Has Value Extensions
+
+A collection of extension methods to check if a property has a value. Checks vary depending on what the object is.
+
+Usage:
+```
+var alertsContentArea = StartPage.AlertsContentArea;
+if (alertsContentArea.HasValue()){
+    <div>Alert</div>
+}
+```
+
+Also includes a Coalesce method that uses the HasValue above.
+
+### Get Friendly Url
+
+Returns a valid friendly url for a variety of different types. 
+
+Usage:
+```
+var reference = new ContentReference(5);
+string url = reference.GetFriendlyUrl(/* GetFriendlyUrlOption Options*/);
+```
+
+### Get<T>
+
+Simple extension to get the content T of a ContentReference.
+
+Usage:
+```
+var reference = new ContentReference(5);
+var pageFive = reference.Get<PageData>();
+```
+
+### GetChildren
+
+Utility to get the children of a page.
+
+Usage:
+```
+var myChildren = CurrentPage.GetChildren<PageData>();
+
+<ul>
+foreach(var child in myChildren){
+    <li>@child</li>
+}
+</ul>
+```
+
+## Content Event Handler
+
+The package automatically adds content events for the following interfaces. The method specified in the Interface is called when that event occurs.
+This is a nice clean way to add Content events directly to the content class.
+
+```
+ICreatedContentHandler
+ICreatingContentHandler
+IDeletedContentHandler
+IDeletingContentHandler
+IPublishedContentHandler
+IPublishingContentHandler
+ISavedContentHandler
+ISavingContentHandler
+IMovingContentHandler
+IMovedContentHandler
+```
+
+
+## Enum Selection Factory
 
 *Usage*:
 ```
@@ -39,22 +117,65 @@ public enum DisplaySettings
 [SelectOne(SelectionFactoryType = typeof(EnumSelectionFactory<DisplaySettings>))]
 ```
 
-### Abstract Template Coordinator
+
+## Html Extensions 
+
+### PropertyTemplateFor
+
+A wrapper for PropertyFor that allows you to change out the tags used when rendering. Useful for Xhtmlstrings that are used for Headings.
+
+### Get String
+
+A tiny method to convert IHtmlContent into a string. This utility method is to account for a .Net 5 change to IHtmlString.
+
+## Enum Localization
+
+This is used by the Enum Selection Factory. This allows Enums to be localized by a `[Description]` attribute.
+
+## Enumerable Extensions
+
+### Chunk 
+
+Splits an enumerable into chunks. For example a list of 7 in chunk sizes of 2, would return 3 groups of 2, and 1 group of 1
+
+### Split 
+
+Splits an enumerable into a set number of groups, group size is automatically determined.
+
+### As Content
+
+Gets the content for a `IList<ContentReference>` or `IEnumerable<ContentReference>` and returns an `IEnumerable<T>` 
+
+## Content Extensions
+
+### FindFirstAncestorOfType and FindLasttAncestorOfType
+
+Two utility methods to do exactly what their name says. 
+
+## Abstract Template Coordinator
 
 A convenience class for making registering templates simple.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Abstract%20Template%20Coordinator%20-%20Documentation%20Request&Body=)
+[Request More Info](https://github.com/BlendInteractive/Blend.Optimizely/issues/new?title=Abstract%20Template%20Coordinator%20-%20Documentation%20Request&Body=)
 
-### Schedule Job Base
+## Schedule Job Base
 
-A convenient base class for scheduled jobs.
+A convenient base class for scheduled jobs. Inherit your scheduled jobs from `BlendJobBase` to get started.
+This Scheduled Job Starter adds a stop watch, an easy record tracker, and report to keep all your output clean.
+Also included are numerous handy methods for getting all pages, and content publishing only if a change has occured.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Scheduled%20Job%20Base%20-%20Documentation%20Request&Body=)
+[Request More Info](https://github.com/BlendInteractive/Blend.Optimizely/issues/new?title=Scheduled%20Job%20Base%20-%20Documentation%20Request&Body=)
 
 
-### Pagination Model
+## Blend Object Instance Cache
+
+A convenience layer and abstraction around `ISynchronizedObjectInstanceCache`.
+
+[Request More Info](https://github.com/BlendInteractive/Blend.Optimizely/issues/new?title=Blend%20Cache%20-%20Documentation%20Request&Body=)
+
+## Pagination Model
 
 A simple model for calcuating pagination.
 
-[Request More Info](https://github.com/Nhawdge/Blend.Episerver/issues/new?title=Pagination%20-%20Documentation%20Request&Body=)
+[Request More Info](https://github.com/BlendInteractive/Blend.Optimizely/issues/new?title=Pagination%20-%20Documentation%20Request&Body=)
 

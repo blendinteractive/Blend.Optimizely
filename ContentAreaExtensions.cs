@@ -10,6 +10,12 @@ namespace Blend.Optimizely
     {
         private static Injected<IContentLoader> ContentLoader;
 
+        /// <summary>
+        /// Returns a list of content from a content area.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="contentArea"></param>
+        /// <returns></returns>
         public static List<T> AsContent<T>(this ContentArea contentArea) where T : IContentData
         {
             var list = new List<T>();

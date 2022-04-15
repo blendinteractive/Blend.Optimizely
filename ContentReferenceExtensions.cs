@@ -190,6 +190,10 @@ namespace Blend.Optimizely
             return page;
         }
     }
+    public static string GetFriendlyUrl(this Url url)
+    {
+        return UrlResolver.Current.GetUrl(new UrlBuilder(url), EPiServer.Web.ContextMode.Default);
+    }
 
     [Flags]
     public enum GetFriendlyUrlOption
@@ -206,4 +210,6 @@ namespace Blend.Optimizely
 
         Canonical = UseSiteDefinitionHost | FollowShortcuts
     }
+
+
 }

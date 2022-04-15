@@ -11,14 +11,44 @@ namespace Blend.Optimizely
 {
     public static class HtmlExtensions
     {
-        #region Property
+        #region PropertyTemplateFor
 
+        /// <summary>
+        /// Similar to PropertyFor, but allows you to wrap the result in a different tag.
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="model"></param>
+        /// <param name="expression"></param>
+        /// <param name="htmlTagName">Tag to wrap result in</param>
+        /// <returns></returns>
         public static IHtmlContent PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName) =>
             PropertyTemplateFor(model, expression, htmlTagName, null);
 
+        /// <summary>
+        /// Similar to PropertyFor, but allows you to wrap the result in a different tag.
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="model"></param>
+        /// <param name="expression"></param>
+        /// <param name="htmlTagName"></param>
+        /// <param name="htmlAttributes"></param>
+        /// <returns></returns>
         public static IHtmlContent PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> model, Expression<Func<TModel, TResult>> expression, string htmlTagName, object? htmlAttributes) =>
             PropertyTemplateFor(model, expression, htmlTagName, string.Empty, htmlAttributes);
 
+        /// <summary>
+        /// Similar to PropertyFor, but allows you to wrap the result in a different tag.
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="html"></param>
+        /// <param name="expression"></param>
+        /// <param name="htmlTagName"></param>
+        /// <param name="innerHtmlTagName"></param>
+        /// <param name="htmlAttributes"></param>
+        /// <returns></returns>
         public static IHtmlContent PropertyTemplateFor<TModel, TResult>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TResult>> expression, string htmlTagName, string innerHtmlTagName, object? htmlAttributes)
         {
             ModelExpression modelExpression = html.ViewContext.HttpContext.RequestServices.GetRequiredService<ModelExpressionProvider>().CreateModelExpression(html.ViewData, expression);
@@ -99,6 +129,11 @@ namespace Blend.Optimizely
 
         #endregion Property
 
+        /// <summary>
+        /// Converts IHtmlContent into a string.
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
         public static string GetString(this IHtmlContent content)
         {
             using var writer = new System.IO.StringWriter();
