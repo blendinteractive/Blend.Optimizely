@@ -12,6 +12,14 @@ namespace Blend.Optimizely
     {
         private static Injected<IContentLoader> ContentLoader { get; set; }
 
+        /// <summary>
+        /// Splits an enumerable into chunks. For example a list of 7 in chunk sizes of 2, would return 3 groups of 2, and 1 group of 1
+        /// Also see Split
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="chunksize"></param>
+        /// <returns></returns>
         public static IEnumerable<IEnumerable<T>> Chunk<T>(this IEnumerable<T> source, int chunksize)
         {
             while (source.HasValue())
@@ -22,6 +30,14 @@ namespace Blend.Optimizely
         }
 
         // Maintains Sort order.
+        /// <summary>
+        /// Splits an enumerable into a set number of groups, group size is automatically determined.
+        /// Also See Chunk
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="parts"></param>
+        /// <returns></returns>
         public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> source, int parts)
         {
             var list = new List<T>(source);
@@ -44,11 +60,23 @@ namespace Blend.Optimizely
             }
         }
 
+        /// <summary>
+        /// Converts an Enumerable of Content references into an enumerable of content type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="contentLinks"></param>
+        /// <returns></returns>
         public static IEnumerable<T> AsContent<T>(this IEnumerable<ContentReference> contentLinks) =>
             contentLinks.HasValue() ?
             contentLinks.Select(x => ContentLoader.Service.Get<IContent>(x)).OfType<T>() :
             Enumerable.Empty<T>();
 
+        /// <summary>
+        /// Converts an Enumerable of Content references into an enumerable of content type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="contentLinks"></param>
+        /// <returns></returns>
         public static IEnumerable<T> AsContent<T>(this IList<ContentReference> contentLinks) =>
             contentLinks.HasValue() ?
             contentLinks.Select(x => ContentLoader.Service.Get<IContent>(x)).OfType<T>() :

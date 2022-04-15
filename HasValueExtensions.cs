@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Blend.Optimizely
 {
+    /// <summary>
+    /// A collection of extension methods to check if a property has a value. Checks vary depending on what the object is.
+    /// </summary>
     public static class HasValueExtensions
     {
         public static bool HasValue(this ContentReference reference) => !ContentReference.IsNullOrEmpty(reference);
