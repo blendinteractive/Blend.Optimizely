@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+	<TargetFrameworks>net5.0;net6.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>2.0.5</Version>
-    <PackageVersion>2.0.5</PackageVersion>
-    <AssemblyVersion>2.0.5.0</AssemblyVersion>
-    <FileVersion>2.0.5.0</FileVersion>
+    <Version>2.0.6</Version>
+    <PackageVersion>2.0.6</PackageVersion>
+    <AssemblyVersion>2.0.6.0</AssemblyVersion>
+    <FileVersion>2.0.6.0</FileVersion>
     <Authors>Blend Interactive</Authors>
     <Company>Blend Interactive</Company>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
@@ -31,9 +31,12 @@
     <None Include=".github\workflows\main.yml" />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="EPiServer.CMS" Version="12.0.2" />
-    <PackageReference Include="EPiServer.Framework" Version="12.0.3" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="EPiServer.CMS" Version="[12.0.3,13.0)" />
+    <PackageReference Include="EPiServer.Framework" Version="[12.0.3,13.0)" />
   </ItemGroup>
-
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="EPiServer.CMS" Version="[12.4.0,13.0)" />
+    <PackageReference Include="EPiServer.Framework" Version="[12.4.0,13.0)" />
+  </ItemGroup>
 </Project>
