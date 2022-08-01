@@ -62,7 +62,7 @@ namespace Blend.Optimizely
             // edit mode (with or without value)
             if (contextModeResolver.CurrentMode == ContextMode.Edit)
             {
-                return RenderPropertyForEditMode(htmlTagName, innerHtmlTagName, htmlAttributes, modelExpression.Metadata.PropertyName, displayFor);
+                return RenderPropertyForEditMode(htmlTagName, innerHtmlTagName, htmlAttributes, modelExpression!.Metadata!.PropertyName!, displayFor);
             }
 
             // view mode with value
@@ -92,12 +92,12 @@ namespace Blend.Optimizely
             if (innerTagName.HasValue() && hasValue)
             {
                 var innerTagBuilder = new TagBuilder(innerTagName);
-                innerTagBuilder.InnerHtml.AppendHtml(content);
+                innerTagBuilder.InnerHtml.AppendHtml(content!);
                 tagBuilder.InnerHtml.AppendHtml(innerTagBuilder);
             }
             else if (hasValue)
             {
-                tagBuilder.InnerHtml.AppendHtml(content);
+                tagBuilder.InnerHtml.AppendHtml(content!);
             }
 
             return tagBuilder;

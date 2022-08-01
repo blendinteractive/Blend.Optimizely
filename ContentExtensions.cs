@@ -29,7 +29,7 @@ namespace Blend.Optimizely
         /// Gets UrlResolver.Current.GetUrl(page.ContentLink), but with an additional action.
         /// So /en/login becomes /en/login/submit.  Useful for form action URLs
         /// </summary>
-        public static string GetUrlWithAction(this ContentReference link, string actionName, string language = null)
+        public static string GetUrlWithAction(this ContentReference link, string actionName, string? language = null)
             => UrlResolver.Current.GetUrl(link, language, new VirtualPathArguments
             {
 
@@ -44,7 +44,7 @@ namespace Blend.Optimizely
         /// <summary>
         /// Recursively looks for the first ancestor with matching type.
         /// </summary>
-        public static T FindFirstAncestorOfType<T>(this IContent instance) where T : IContent
+        public static T? FindFirstAncestorOfType<T>(this IContent instance) where T : IContent
         {
             if (instance is T)
                 return (T)instance;
@@ -55,7 +55,7 @@ namespace Blend.Optimizely
         /// <summary>
         /// Recursively looks for the last ancestor with matching type.
         /// </summary>
-        public static T FindLasttAncestorOfType<T>(this IContent instance) where T : IContent
+        public static T? FindLasttAncestorOfType<T>(this IContent instance) where T : IContent
         {
             return contentLoader.Service.GetAncestors(instance.ContentLink).OfType<T>().LastOrDefault();
         }

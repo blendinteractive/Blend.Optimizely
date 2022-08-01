@@ -22,7 +22,7 @@ namespace Blend.Optimizely
         /// <param name="contentLink">The link to the content.</param>
         /// <param name="language">The language</param>
         /// <returns>The type of content to get.</returns>
-        public static TContent Get<TContent>(this ContentReference contentLink, string language = null) where TContent : IContentData
+        public static TContent Get<TContent>(this ContentReference contentLink, string? language = null) where TContent : IContentData
         {
             if (language != null)
                 return contentLoader.Service.Get<TContent>(contentLink, CultureInfo.GetCultureInfo(language));
@@ -37,7 +37,7 @@ namespace Blend.Optimizely
         /// <param name="contentLink">A reference to the parent whose children should be returned.</param>
         /// <param name="language">The language.</param>
         /// <returns>The children of the specifed parent, as the specified type.</returns>
-        public static IEnumerable<TContent> GetChildren<TContent>(this ContentReference contentLink, string language = null) where TContent : IContentData
+        public static IEnumerable<TContent> GetChildren<TContent>(this ContentReference contentLink, string? language = null) where TContent : IContentData
         {
             if (language != null)
                 return contentLoader.Service.GetChildren<TContent>(contentLink, CultureInfo.GetCultureInfo(language));
@@ -45,7 +45,7 @@ namespace Blend.Optimizely
             return contentLoader.Service.GetChildren<TContent>(contentLink);
         }
 
-        private static string GetFetchDataFriendlyUrl(ContentReference contentReference, GetFriendlyUrlOption options, string actionName, string language)
+        private static string? GetFetchDataFriendlyUrl(ContentReference contentReference, GetFriendlyUrlOption options, string? actionName, string? language)
         {
             PageData asContent;
             try
@@ -76,7 +76,7 @@ namespace Blend.Optimizely
         /// <param name="contentReference">Content reference for which to create friendly url.</param>
         /// <param name="includeHost">Mark if include host name in the url.</param>
         /// <returns>String representation of URL for provided content reference.</returns>
-        public static string GetFriendlyUrl(this ContentReference contentReference, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string actionName = null, string language = null)
+        public static string GetFriendlyUrl(this ContentReference contentReference, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? actionName = null, string? language = null)
         {
             if (!contentReference.HasValue()) return string.Empty;
 
@@ -105,7 +105,7 @@ namespace Blend.Optimizely
             return GetFriendlyUrl(url, options);
         }
 
-        public static string GetNonContentFriendlyUrl(object nonConentObject, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string language = null, VirtualPathArguments virtualPathArguments = null)
+        public static string GetNonContentFriendlyUrl(object nonConentObject, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? language = null, VirtualPathArguments? virtualPathArguments = null)
         {
             var urlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
             var url = urlResolver.GetVirtualPathForNonContent(nonConentObject, language, virtualPathArguments).GetUrl();
@@ -151,7 +151,7 @@ namespace Blend.Optimizely
         /// <param name="rootPage">The root contentReference in which to start the recursion.</param>
         /// <param name="includeRootPage">Includes the current root page to start instead of parent</param>
         /// <returns></returns>
-        public static TPageData FindFirstAncestorOfType<TPageData>(this ContentReference rootPage) where TPageData : PageData
+        public static TPageData? FindFirstAncestorOfType<TPageData>(this ContentReference rootPage) where TPageData : PageData
         {
             var contentItem = contentLoader.Service.Get<IContent>(rootPage);
             if (contentItem is PageData)

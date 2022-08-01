@@ -26,7 +26,7 @@ namespace Blend.Optimizely
             eventRegistry.MovedContent += OnMovedContent;
         }
 
-        private void OnCreatingContent(object sender, ContentEventArgs e)
+        private void OnCreatingContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is ICreatingContentHandler)
             {
@@ -34,7 +34,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnCreatedContent(object sender, ContentEventArgs e)
+        private void OnCreatedContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is ICreatedContentHandler)
             {
@@ -42,7 +42,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnDeletingContent(object sender, DeleteContentEventArgs e)
+        private void OnDeletingContent(object? sender, DeleteContentEventArgs e)
         {
             if (e.Content is IDeletingContentHandler)
             {
@@ -50,7 +50,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnDeletedContent(object sender, DeleteContentEventArgs e)
+        private void OnDeletedContent(object? sender, DeleteContentEventArgs e)
         {
             if (e.Content is IDeletedContentHandler)
             {
@@ -58,7 +58,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnSavingContent(object sender, ContentEventArgs e)
+        private void OnSavingContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is ISavingContentHandler)
             {
@@ -66,7 +66,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnSavedContent(object sender, ContentEventArgs e)
+        private void OnSavedContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is ISavedContentHandler)
             {
@@ -74,7 +74,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnPublishingContent(object sender, ContentEventArgs e)
+        private void OnPublishingContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is IPublishingContentHandler)
             {
@@ -82,7 +82,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnPublishedContent(object sender, ContentEventArgs e)
+        private void OnPublishedContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is IPublishedContentHandler)
             {
@@ -90,7 +90,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnMovingContent(object sender, ContentEventArgs e)
+        private void OnMovingContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is IMovingContentHandler)
             {
@@ -98,7 +98,7 @@ namespace Blend.Optimizely
             }
         }
 
-        private void OnMovedContent(object sender, ContentEventArgs e)
+        private void OnMovedContent(object? sender, ContentEventArgs e)
         {
             if (e.Content is IMovedContentHandler)
             {
@@ -129,51 +129,51 @@ namespace Blend.Optimizely
 
     public interface ICreatedContentHandler
     {
-        void CreatedContent(object sender, ContentEventArgs e);
+        void CreatedContent(object? sender, ContentEventArgs e);
     }
 
     public interface ICreatingContentHandler
     {
-        void CreatingContent(object sender, ContentEventArgs e);
+        void CreatingContent(object? sender, ContentEventArgs e);
     }
 
     public interface IDeletedContentHandler
     {
-        void DeletedContent(object sender, DeleteContentEventArgs e);
+        void DeletedContent(object? sender, DeleteContentEventArgs e);
     }
 
     public interface IDeletingContentHandler
     {
-        void DeletingContent(object sender, DeleteContentEventArgs e);
+        void DeletingContent(object? sender, DeleteContentEventArgs e);
     }
 
     public interface IPublishedContentHandler
     {
-        void PublishedContent(object sender, ContentEventArgs e);
+        void PublishedContent(object? sender, ContentEventArgs e);
     }
 
     public interface IPublishingContentHandler
     {
-        void PublishingContent(object sender, ContentEventArgs e);
+        void PublishingContent(object? sender, ContentEventArgs e);
     }
 
     public interface ISavedContentHandler
     {
-        void SavedContent(object sender, ContentEventArgs e);
+        void SavedContent(object? sender, ContentEventArgs e);
     }
 
     public interface ISavingContentHandler
     {
-        void SavingContent(object sender, ContentEventArgs e);
+        void SavingContent(object? sender, ContentEventArgs e);
     }
 
     public interface IMovingContentHandler
     {
-        void MovingContent(object sender, ContentEventArgs e);
+        void MovingContent(object? sender, ContentEventArgs e);
     }
 
     public interface IMovedContentHandler
     {
-        void MovedContent(object sender, ContentEventArgs e);
+        void MovedContent(object? sender, ContentEventArgs e);
     }
 }

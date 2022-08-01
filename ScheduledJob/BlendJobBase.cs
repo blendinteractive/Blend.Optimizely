@@ -74,19 +74,17 @@ namespace Blend.Optimizely.ScheduledJobs
             this.IsStoppable = true;
         }
 
-        protected string LogFilePath;
-
         protected int TotalRecords { get; set; }
 
         protected bool StopJob { get; set; }
 
-        protected string CurrentStatus { get; set; }
+        protected string? CurrentStatus { get; set; }
 
         protected int CurrentRecordNumber { get; set; }
 
-        protected Dictionary<string, int> Counters { get; set; }
+        protected Dictionary<string, int>? Counters { get; set; }
 
-        protected Stopwatch Stopwatch { get; set; }
+        protected Stopwatch? Stopwatch { get; set; }
 
         protected void StartTimer()
         {
@@ -99,7 +97,7 @@ namespace Blend.Optimizely.ScheduledJobs
 
         protected void StopTimer()
         {
-            Stopwatch.Stop();
+            Stopwatch?.Stop();
         }
 
         public override void Stop()
@@ -237,21 +235,20 @@ namespace Blend.Optimizely.ScheduledJobs
 
     public class LogFile
     {
-        private string internalPath;
+        private readonly string internalPath;
 
-        private readonly string fileNameFormat = "yyyy-MM-dd-hhmm";
+        private const string fileNameFormat = "yyyy-MM-dd-hhmm";
 
-        private readonly string fileExtension = "txt";
+        private const string fileExtension = "txt";
 
         public bool IncludeTimestamp { get; set; }
 
-        public LogFile(string path)
+        private LogFile(string internalPath)
         {
-            InitializeLog(path);
-            File.Delete(internalPath);
+            this.internalPath = internalPath;
         }
 
-        private void InitializeLog(string path)
+        public static LogFile InitializeLog(string path)
         {
             if (path.StartsWith("~") || path.StartsWith("/"))
             {
@@ -260,15 +257,21 @@ namespace Blend.Optimizely.ScheduledJobs
             }
 
             // Ensure a directory exists for this path
-            Directory.CreateDirectory(Path.GetDirectoryName(path));
+            var directoryName = Path.GetDirectoryName(path);
+            if (directoryName is null)
+                throw new InvalidOperationException($"Could not get directory name for path {path}");
+            Directory.CreateDirectory(directoryName);
 
             // If this is not to an actual file, tack on a date-based filename
-            if (Path.GetExtension(path) == String.Empty)
+            if (!Path.GetExtension(path).HasValue())
             {
                 path = Path.Combine(path, String.Concat(DateTime.Now.ToString(fileNameFormat), ".", fileExtension));
             }
 
-            internalPath = path;
+            if (File.Exists(path))
+                File.Delete(path);
+
+            return new LogFile(path);
         }
 
         public string Write()
@@ -288,7 +291,7 @@ namespace Blend.Optimizely.ScheduledJobs
                 return String.Empty;
             }
 
-            string text = objectText.ToString();
+            string text = objectText.ToString() ?? "";
 
             if (variables.Count() > 0)
             {
