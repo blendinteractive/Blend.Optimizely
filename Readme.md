@@ -38,17 +38,25 @@ public enum ImageSizes {
 
 ## Has Value Extensions
 
-A collection of extension methods to check if a property has a value. Checks vary depending on what the object is.
+A collection of extension methods to check if a property is not null, and has a value. Checks vary depending on what the object is, for example, `HasValue` on a list will check that the list is not null and contains at least one element.
 
 Usage:
+
 ```
 var alertsContentArea = StartPage.AlertsContentArea;
-if (alertsContentArea.HasValue()){
+if (alertsContentArea.HasValue()) {
     <div>Alert</div>
 }
 ```
 
-Also includes a Coalesce method that uses the HasValue above.
+Also includes a `Coalesce` method that uses `HasValue` to coalesce empty values to a default value.
+
+Usage:
+
+```
+var pageTitle = currentContent.PageTitle.Coalesce(currentContent.Name);
+```
+
 
 ### Get Friendly Url
 
@@ -79,9 +87,9 @@ Usage:
 var myChildren = CurrentPage.GetChildren<PageData>();
 
 <ul>
-foreach(var child in myChildren){
-    <li>@child</li>
-}
+    @foreach (var child in myChildren) {
+        <li>@child</li>
+    }
 </ul>
 ```
 
