@@ -132,6 +132,22 @@ A tiny method to convert IHtmlContent into a string. This utility method is to a
 
 This is used by the Enum Selection Factory. This allows Enums to be localized by a `[Description]` attribute.
 
+## ConvertTextAreaToHtml
+
+Takes a multiline string of plain text and converts it to HTML. This automatically encodes HTML entities and converts newlines to `<br />` tags. This method should handle Windows, Mac, and Unix style breaks.
+
+Usage:
+
+```
+var example = @"This is a <test>.
+It should work.";
+
+var output = example.ConvertTextAreaToHtml();
+/* Output should be:
+This is a &lt;test&gt;.<br />
+It should work.
+```
+
 ## Enumerable Extensions
 
 ### Chunk 
