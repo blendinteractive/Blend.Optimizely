@@ -4,16 +4,16 @@ using System.Collections.Generic;
 
 namespace Blend.Optimizely.EditorDescriptors
 {
-    public class EnumSelectionFactory<TEnum> : ISelectionFactory
+    public class EnumSelectionFactory<TEnum> : ISelectionFactory where TEnum : struct, Enum
     {
         public IEnumerable<ISelectItem> GetSelections(ExtendedMetadata metadata)
         {
-            var values = Enum.GetValues(typeof(TEnum));
+            var values = Enum.GetValues<TEnum>();
             foreach (var value in values)
             {
                 yield return new SelectItem
                 {
-                    Text = EnumLocalization.GetValueName<TEnum>(value),
+                    Text = EnumLocalization.GetValueName(value),
                     Value = value
                 };
             }

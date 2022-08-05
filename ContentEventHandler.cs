@@ -26,83 +26,83 @@ namespace Blend.Optimizely
             eventRegistry.MovedContent += OnMovedContent;
         }
 
-        private void OnCreatingContent(object sender, ContentEventArgs e)
+        private void OnCreatingContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is ICreatingContentHandler)
+            if (e.Content is ICreatingContentHandler creatingContent)
             {
-                ((ICreatingContentHandler)e.Content).CreatingContent(sender, e);
+                creatingContent.CreatingContent(sender, e);
             }
         }
 
-        private void OnCreatedContent(object sender, ContentEventArgs e)
+        private void OnCreatedContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is ICreatedContentHandler)
+            if (e.Content is ICreatedContentHandler createdContent)
             {
-                ((ICreatedContentHandler)e.Content).CreatedContent(sender, e);
+                createdContent.CreatedContent(sender, e);
             }
         }
 
-        private void OnDeletingContent(object sender, DeleteContentEventArgs e)
+        private void OnDeletingContent(object? sender, DeleteContentEventArgs e)
         {
-            if (e.Content is IDeletingContentHandler)
+            if (e.Content is IDeletingContentHandler deletingContent)
             {
-                ((IDeletingContentHandler)e.Content).DeletingContent(sender, e);
+                deletingContent.DeletingContent(sender, e);
             }
         }
 
-        private void OnDeletedContent(object sender, DeleteContentEventArgs e)
+        private void OnDeletedContent(object? sender, DeleteContentEventArgs e)
         {
-            if (e.Content is IDeletedContentHandler)
+            if (e.Content is IDeletedContentHandler deletedContent)
             {
-                ((IDeletedContentHandler)e.Content).DeletedContent(sender, e);
+                deletedContent.DeletedContent(sender, e);
             }
         }
 
-        private void OnSavingContent(object sender, ContentEventArgs e)
+        private void OnSavingContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is ISavingContentHandler)
+            if (e.Content is ISavingContentHandler savingContent)
             {
-                ((ISavingContentHandler)e.Content).SavingContent(sender, e);
+                savingContent.SavingContent(sender, e);
             }
         }
 
-        private void OnSavedContent(object sender, ContentEventArgs e)
+        private void OnSavedContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is ISavedContentHandler)
+            if (e.Content is ISavedContentHandler savedContent)
             {
-                ((ISavedContentHandler)e.Content).SavedContent(sender, e);
+                savedContent.SavedContent(sender, e);
             }
         }
 
-        private void OnPublishingContent(object sender, ContentEventArgs e)
+        private void OnPublishingContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is IPublishingContentHandler)
+            if (e.Content is IPublishingContentHandler publishingContent)
             {
-                ((IPublishingContentHandler)e.Content).PublishingContent(sender, e);
+                publishingContent.PublishingContent(sender, e);
             }
         }
 
-        private void OnPublishedContent(object sender, ContentEventArgs e)
+        private void OnPublishedContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is IPublishedContentHandler)
+            if (e.Content is IPublishedContentHandler publishedContent)
             {
-                ((IPublishedContentHandler)e.Content).PublishedContent(sender, e);
+                publishedContent.PublishedContent(sender, e);
             }
         }
 
-        private void OnMovingContent(object sender, ContentEventArgs e)
+        private void OnMovingContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is IMovingContentHandler)
+            if (e.Content is IMovingContentHandler movingContent)
             {
-                ((IMovingContentHandler)e.Content).MovingContent(sender, e);
+                movingContent.MovingContent(sender, e);
             }
         }
 
-        private void OnMovedContent(object sender, ContentEventArgs e)
+        private void OnMovedContent(object? sender, ContentEventArgs e)
         {
-            if (e.Content is IMovedContentHandler)
+            if (e.Content is IMovedContentHandler movedContent)
             {
-                ((IMovedContentHandler)e.Content).MovedContent(sender, e);
+                movedContent.MovedContent(sender, e);
             }
         }
 
@@ -121,59 +121,55 @@ namespace Blend.Optimizely
             eventRegistry.MovingContent -= OnMovingContent;
             eventRegistry.MovedContent -= OnMovedContent;
         }
-
-        public void Preload(string[] parameters)
-        {
-        }
     }
 
     public interface ICreatedContentHandler
     {
-        void CreatedContent(object sender, ContentEventArgs e);
+        void CreatedContent(object? sender, ContentEventArgs e);
     }
 
     public interface ICreatingContentHandler
     {
-        void CreatingContent(object sender, ContentEventArgs e);
+        void CreatingContent(object? sender, ContentEventArgs e);
     }
 
     public interface IDeletedContentHandler
     {
-        void DeletedContent(object sender, DeleteContentEventArgs e);
+        void DeletedContent(object? sender, DeleteContentEventArgs e);
     }
 
     public interface IDeletingContentHandler
     {
-        void DeletingContent(object sender, DeleteContentEventArgs e);
+        void DeletingContent(object? sender, DeleteContentEventArgs e);
     }
 
     public interface IPublishedContentHandler
     {
-        void PublishedContent(object sender, ContentEventArgs e);
+        void PublishedContent(object? sender, ContentEventArgs e);
     }
 
     public interface IPublishingContentHandler
     {
-        void PublishingContent(object sender, ContentEventArgs e);
+        void PublishingContent(object? sender, ContentEventArgs e);
     }
 
     public interface ISavedContentHandler
     {
-        void SavedContent(object sender, ContentEventArgs e);
+        void SavedContent(object? sender, ContentEventArgs e);
     }
 
     public interface ISavingContentHandler
     {
-        void SavingContent(object sender, ContentEventArgs e);
+        void SavingContent(object? sender, ContentEventArgs e);
     }
 
     public interface IMovingContentHandler
     {
-        void MovingContent(object sender, ContentEventArgs e);
+        void MovingContent(object? sender, ContentEventArgs e);
     }
 
     public interface IMovedContentHandler
     {
-        void MovedContent(object sender, ContentEventArgs e);
+        void MovedContent(object? sender, ContentEventArgs e);
     }
 }

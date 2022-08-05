@@ -1,6 +1,7 @@
 ﻿using EPiServer.DataAbstraction;
 using EPiServer.Framework.Web;
 using EPiServer.Web.Mvc;
+using System;
 
 namespace Blend.Optimizely.Rendering
 {
@@ -14,7 +15,7 @@ namespace Blend.Optimizely.Rendering
 
         public virtual string PagesFolder { get; } = "~/Views/Pages/";
 
-        protected TemplateModelCollection TemplateModelCollection { get; private set; }
+        protected TemplateModelCollection? TemplateModelCollection { get; private set; }
 
         public void Register(TemplateModelCollection viewTemplateModelRegistrator)
         {
@@ -28,6 +29,9 @@ namespace Blend.Optimizely.Rendering
 
         protected virtual void RegisterBlock<T>(params string[] tags)
         {
+            if (TemplateModelCollection is null)
+                throw new InvalidOperationException("RegisterBlock must be called from Register");
+
             string typeName = typeof(T).Name;
 
             TemplateModelCollection.Add(typeof(T), new TemplateModel
@@ -55,6 +59,9 @@ namespace Blend.Optimizely.Rendering
 
         protected virtual void RegisterPartial<T>(params string[] tags)
         {
+            if (TemplateModelCollection is null)
+                throw new InvalidOperationException("RegisterPartial must be called from Register");
+
             string typeName = typeof(T).Name;
 
             TemplateModelCollection.Add(typeof(T), new TemplateModel
@@ -71,6 +78,9 @@ namespace Blend.Optimizely.Rendering
 
         protected virtual void RegisterPartialsOnly<T>(params string[] tags)
         {
+            if (TemplateModelCollection is null)
+                throw new InvalidOperationException("RegisterPartialsOnly must be called from Register");
+
             string typeName = typeof(T).Name;
 
             foreach (string tag in tags)
@@ -89,6 +99,9 @@ namespace Blend.Optimizely.Rendering
 
         protected virtual void RegisterMedia<T>(params string[] tags)
         {
+            if (TemplateModelCollection is null)
+                throw new InvalidOperationException("RegisterMedia must be called from Register");
+
             string typeName = typeof(T).Name;
 
             TemplateModelCollection.Add(typeof(T), new TemplateModel

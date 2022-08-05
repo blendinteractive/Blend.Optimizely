@@ -5,7 +5,7 @@ namespace Blend.Optimizely.Caching
 {
     public interface ICacheService
     {
-        TValue Get<TValue>(string cacheKey) where TValue : class;
+        TValue? Get<TValue>(string cacheKey) where TValue : class;
 
         TValue Get<TValue>(string cacheKey, Func<TValue> getItemCallback) where TValue : class;
 

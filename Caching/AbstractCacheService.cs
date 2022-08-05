@@ -18,7 +18,7 @@ namespace Blend.Optimizely.Caching
             _DefaultCacheEvictionPolicy = new CacheEvictionPolicy(_DefaultCacheDuration, CacheTimeoutType.Absolute);
         }
 
-        public abstract TValue Get<TValue>(string cacheKey) where TValue : class;
+        public abstract TValue? Get<TValue>(string cacheKey) where TValue : class;
 
         public abstract TValue Get<TValue>(string cacheKey, CacheEvictionPolicy cacheEvictionPolicy, Func<TValue> getItemCallback) where TValue : class;
 

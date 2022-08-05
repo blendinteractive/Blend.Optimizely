@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace Blend.Optimizely
 {
@@ -12,9 +13,14 @@ namespace Blend.Optimizely
         private static string _GetDisplayName(Enum value)
         {
             var fieldInfo = value.GetType().GetField(value.ToString());
-            var descriptionAttributes = fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false) as DisplayAttribute[];
+            if (fieldInfo is null)
+                throw new InvalidOperationException($"Could not get Enum value for {value}");
 
-            return (descriptionAttributes != null && descriptionAttributes.Length > 0) ? descriptionAttributes[0].Name : value.ToString();
+            var descriptionAttributes = fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false) as DisplayAttribute[];
+            if (descriptionAttributes.HasValue())
+                return descriptionAttributes.First().Name ?? value.ToString();
+
+            return value.ToString();
         }
     }
 }

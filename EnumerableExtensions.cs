@@ -100,8 +100,11 @@ namespace Blend.Optimizely
             }
         }
 
-        private static void AddValues(NameValueCollection addTo, string key, string[] keyValues)
+        private static void AddValues(NameValueCollection addTo, string key, string[]? keyValues)
         {
+            if (keyValues is null)
+                return;
+
             for (int i = 0; i < keyValues.Length; i++)
                 addTo.Add(key, keyValues[i]);
         }
@@ -111,7 +114,7 @@ namespace Blend.Optimizely
             var last = items.LastOrDefault();
             if (last == null)
                 return false;
-            return item.Equals(last);
+            return last.Equals(item);
         }
 
         public static bool IsFirst<T>(this IEnumerable<T> items, T item)
@@ -119,37 +122,37 @@ namespace Blend.Optimizely
             var first = items.FirstOrDefault();
             if (first == null)
                 return false;
-            return item.Equals(first);
+            return first.Equals(item);
         }
 
         public static bool IsFirstOrLast<T>(this IEnumerable<T> items, T item) =>
             items.IsFirst(item) || items.IsLast(item);
 
-        public static T GetNext<T>(this IEnumerable<T> list, T current)
+        public static T? GetNext<T>(this IEnumerable<T> list, T current)
         {
             if (!list.HasValue())
-                return default(T);
+                return default;
             try
             {
-                return list.SkipWhile(x => !x.Equals(current)).Skip(1).First();
+                return list.SkipWhile(x => !x!.Equals(current)).Skip(1).First();
             }
             catch
             {
-                return default(T);
+                return default;
             }
         }
 
-        public static T GetPrevious<T>(this IEnumerable<T> list, T current)
+        public static T? GetPrevious<T>(this IEnumerable<T> list, T current)
         {
             if (!list.HasValue())
-                return default(T);
+                return default;
             try
             {
-                return list.TakeWhile(x => !x.Equals(current)).Last();
+                return list.TakeWhile(x => !x!.Equals(current)).Last();
             }
             catch
             {
-                return default(T);
+                return default;
             }
         }
 
