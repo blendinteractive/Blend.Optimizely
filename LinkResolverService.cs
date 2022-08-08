@@ -30,6 +30,7 @@ namespace Blend.Optimizely
                 LinkItem linkItem => ResolveLinkItem(linkItem, options),
                 ContentReference contentReference => ResolveContentReference(contentReference, options),
                 int integerReference => ResolveContentReference(new ContentReference(integerReference), options),
+                string href => ResolveUrlString(href, options),
                 _ => null
             };
 
@@ -38,19 +39,29 @@ namespace Blend.Optimizely
 
         public virtual ResolvedLink? ResolveLinkItem(LinkItem linkItem, LinkOptions options = LinkOptions.None)
         {
-            var content = UrlResolver.Service.Route(new UrlBuilder(linkItem.Href));
+            var resolvedUrl = ResolveUrlString(linkItem.Href);
+            if (resolvedUrl is null)
+                return null;
+
+            if (!string.IsNullOrEmpty(linkItem.Target))
+                return resolvedUrl with { Target = linkItem.Target };
+
+            return resolvedUrl;
+        }
+
+        public virtual ResolvedLink? ResolveUrlString(string href, LinkOptions options = LinkOptions.None)
+        {
+            var content = UrlResolver.Service.Route(new UrlBuilder(href));
             if (content is not null)
             {
                 var resolvedContent = ResolveIContent(content, options);
                 if (resolvedContent is not null)
                 {
-                    if (!string.IsNullOrEmpty(linkItem.Target))
-                        return resolvedContent with { Target = linkItem.Target };
                     return resolvedContent;
                 }
             }
 
-            return new ResolvedLink(linkItem.Href, linkItem.Target);
+            return new ResolvedLink(href, null);
         }
 
         public virtual ResolvedLink? ResolveUrl(Url url, LinkOptions options = LinkOptions.None)
