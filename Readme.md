@@ -58,14 +58,23 @@ var pageTitle = currentContent.PageTitle.Coalesce(currentContent.Name);
 ```
 
 
-### Get Friendly Url
+### Link Resolver Service
 
-Returns a valid friendly url for a variety of different types. 
+The `LinkResolverService` gives a unified way of resolving references to content in Optimizely. It includes support for resolving `ContentReference`, `IContent`, `LinkItem`, and `Url` references. The resolved links can optionally follow internal shortcuts and include the full domain and scheme (for canonical links, for example). Links are resolved as `ResolvedLink` objects, which include the final resolved URL and the target attribute value to be used in anchor tags.
+
+There is also a set of `ResolveUrl` extension methods that only return the URL for convenience. These extension methods replace the `GetFriendlyUrl` methods in this package which have been mostly obsoleted.
 
 Usage:
+
 ```
+// Using the service
+var page = ContentLoader.Get<StandardPage>(10);
+var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveIContent(page, LinkOptions.None);
+var url = resolved is not null ? resolved.Href : "ERROR";
+
+// Using the extension methods
 var reference = new ContentReference(5);
-string url = reference.GetFriendlyUrl(/* GetFriendlyUrlOption Options*/);
+string canonicalUrl = reference.ResolveUrl(LinkOptions.IncludeDomain);
 ```
 
 ### Get<T>
