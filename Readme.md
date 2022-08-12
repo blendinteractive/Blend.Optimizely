@@ -203,3 +203,69 @@ A simple model for calcuating pagination.
 
 [Request More Info](https://github.com/BlendInteractive/Blend.Optimizely/issues/new?title=Pagination%20-%20Documentation%20Request&Body=)
 
+## Result class
+
+The `Result<TValue, TError>` class is a way to represent results from an API call, handling both successful values and errors. It includes a number of methods to ensure successes and failures are handled. This is essentially an Either monad.
+
+Usage:
+
+```
+// As an API result
+public Result<string, UserError> GetUsername(int userId)
+{
+    // Using implicit conversion to convert `string` and `UserError` results to `Result<string, UserError>`
+    if (!UserService.IsAuthenticated)
+        return GetUsernameError.Unauthenticated;
+    if (!UserService.IsCurrentUserAdmin)
+        return GetUsernameError.AccessDenied;
+    var user = UserService.GetUser(userId);
+    if (user is null)
+        return GetUsernameError.UserDoesNotExist;
+    return user.Username;
+}
+
+// Note: The implicit conversion doesn't work for interfaces, so you can also use the `Result` static methods.
+public Result<ISearchResult, SearchError> ExecuteSearch(Query query) {
+    if (Search.IsDown)
+        return SearchError.SearchIsDownAgain; // Implicit conversion
+    
+    ISearchResult result = Search.ExecuteQuery(query);
+    return Result.Success<ISearchResult, SearchError>(result); // Using the static method to construct the Result.
+}
+
+// There are a few ways to consume a result:
+
+// You can use the record as-is.
+var result = searchService.ExecuteQuery(query);
+if (result.IsSuccess)
+    return View("~/Search/Error.cshtml", result.Error);
+else
+    return View("~/Search/Results.cshtml", result.Value);
+
+
+// You can destructure the record for quick access to values
+var (results, error, isSuccess) = searchService.ExecuteQuery(query);
+if (!isSuccess)
+    return View("~/Search/Error.cshtml", error);
+else
+    return View("~/Search/Results.cshtml", results);
+
+// If you're using nullable reference types, to avoid null check warnings, you can use the `HasSuccessValue` and `HasError` methods.
+var result = searchService.ExecuteQuery(query);
+if (result.HasError(out var error))
+    return View("~/Search/Error.cshtml", error); // The compiler knows error is not null here.
+else if (result.HasSuccessValue(out var results))
+    return View("~/Search/Results.cshtml", results); // The compiler knows results it not null here.
+else
+    throw new NotImplementedException("Something was null that shouldn't have been!");
+
+// If you want to force both success and error paths to be handled at compile time, you can use the `Switch` and `Match` extension methods, where `Switch` executes the correct path expecting no returned values, and `Match` executes the correct path but expects a returned value.
+
+return searchService.ExecuteQuery(query).Match(
+    (error) => View("~/Search/Error.cshtml", error),
+    (results) => View("~/Search/Results.cshtml", results)
+);
+```
+
+Note that both `Switch` and `Match` expect that for successful values, `Value` is not null and for non-successful values, `Error` is not null. Otherwise a `NotImplementedException` will be thrown. This is to avoid having to do null checks in the `onSuccess` and `onError` delegates.
+
