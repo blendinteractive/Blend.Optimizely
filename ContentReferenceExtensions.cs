@@ -1,6 +1,7 @@
 ﻿using EPiServer;
 using EPiServer.Core;
 using EPiServer.ServiceLocation;
+using EPiServer.SpecializedProperties;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using System;
@@ -76,6 +77,7 @@ namespace Blend.Optimizely
         /// <param name="contentReference">Content reference for which to create friendly url.</param>
         /// <param name="includeHost">Mark if include host name in the url.</param>
         /// <returns>String representation of URL for provided content reference.</returns>
+        [Obsolete("Use ResolveUrl extension method instead")]
         public static string GetFriendlyUrl(this ContentReference contentReference, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? actionName = null, string? language = null)
         {
             if (!contentReference.HasValue()) return string.Empty;
@@ -112,6 +114,7 @@ namespace Blend.Optimizely
             return GetFriendlyUrl(url, options);
         }
 
+        [Obsolete("Use LinkResolverService instead")]
         public static string GetFriendlyUrl(string url, GetFriendlyUrlOption options = GetFriendlyUrlOption.None)
         {
             bool useSiteDefinitionHost = (options & GetFriendlyUrlOption.UseSiteDefinitionHost) != 0;
@@ -142,7 +145,42 @@ namespace Blend.Optimizely
             return urlBuilder.ToString();
         }
 
+        [Obsolete("Use ResolveUrl extension method instead")]
         public static string GetFriendlyUrl(this PageData pageData, GetFriendlyUrlOption options = GetFriendlyUrlOption.None) => GetFriendlyUrl(pageData.ContentLink, options);
+
+
+        public static string? ResolveUrl(this LinkItem linkItem, LinkOptions options = LinkOptions.None)
+        {
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveLinkItem(linkItem, options);
+            if (resolved is null)
+                return null;
+            return resolved.Href;
+        }
+
+        public static string? ResolveUrl(this IContent content, LinkOptions options = LinkOptions.None)
+        {
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveIContent(content, options);
+            if (resolved is null)
+                return null;
+            return resolved.Href;
+        }
+
+        public static string? ResolveUrl(this ContentReference content, LinkOptions options = LinkOptions.None)
+        {
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveContentReference(content, options);
+            if (resolved is null)
+                return null;
+            return resolved.Href;
+        }
+
+        public static string? ResolveUrl(this Url url, LinkOptions options = LinkOptions.None)
+        {
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveUrl(url, options);
+            if (resolved is null)
+                return null;
+            return resolved.Href;
+        }
+
 
         /// <summary>
         /// Recursively looks for parent pages with matching PageTypName
