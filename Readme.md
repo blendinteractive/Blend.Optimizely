@@ -237,7 +237,7 @@ public Result<ISearchResult, SearchError> ExecuteSearch(Query query) {
 
 // You can use the record as-is.
 var result = searchService.ExecuteQuery(query);
-if (result.IsSuccess)
+if (!result.IsSuccess)
     return View("~/Search/Error.cshtml", result.Error);
 else
     return View("~/Search/Results.cshtml", result.Value);
