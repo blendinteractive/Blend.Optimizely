@@ -148,7 +148,6 @@ namespace Blend.Optimizely
         [Obsolete("Use ResolveUrl extension method instead")]
         public static string GetFriendlyUrl(this PageData pageData, GetFriendlyUrlOption options = GetFriendlyUrlOption.None) => GetFriendlyUrl(pageData.ContentLink, options);
 
-
         public static string? ResolveUrl(this LinkItem linkItem, LinkOptions options = LinkOptions.None)
         {
             var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveLinkItem(linkItem, options);
@@ -157,9 +156,9 @@ namespace Blend.Optimizely
             return resolved.Href;
         }
 
-        public static string? ResolveUrl(this IContent content, LinkOptions options = LinkOptions.None)
+        public static string? ResolveUrl(this IContent content, string languageBranchId = "", LinkOptions options = LinkOptions.None)
         {
-            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveIContent(content, options);
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveIContent(content, languageBranchId, options);
             if (resolved is null)
                 return null;
             return resolved.Href;
@@ -180,7 +179,6 @@ namespace Blend.Optimizely
                 return null;
             return resolved.Href;
         }
-
 
         /// <summary>
         /// Recursively looks for parent pages with matching PageTypName
@@ -249,6 +247,4 @@ namespace Blend.Optimizely
 
         Canonical = UseSiteDefinitionHost | FollowShortcuts
     }
-
-
 }

@@ -5,19 +5,20 @@ using EPiServer.SpecializedProperties;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using System;
+using System.Globalization;
 
 namespace Blend.Optimizely
 {
     [ServiceConfiguration]
     public class LinkResolverService
     {
-
         private Injected<IContentLoader> ContentLoader { get; }
+
         private Injected<ISiteDefinitionResolver> SiteDefinitionResolver { get; }
+
         private Injected<IUrlResolver> UrlResolver { get; }
 
-
-        public virtual ResolvedLink? TryResolveLink(object? contentLink, LinkOptions options = LinkOptions.None)
+        public virtual ResolvedLink? TryResolveLink(object? contentLink, LinkOptions options = LinkOptions.None, string languageBranchId = "")
         {
             if (contentLink is null)
                 return null;
@@ -25,7 +26,7 @@ namespace Blend.Optimizely
             var resolvedLink = contentLink switch
             {
                 IResolvable resolvable => resolvable.Resolve(options),
-                IContent content => ResolveIContent(content, options),
+                IContent content => ResolveIContent(content, languageBranchId, options),
                 Url url => ResolveUrl(url, options),
                 LinkItem linkItem => ResolveLinkItem(linkItem, options),
                 ContentReference contentReference => ResolveContentReference(contentReference, options),
@@ -54,7 +55,7 @@ namespace Blend.Optimizely
             var content = UrlResolver.Service.Route(new UrlBuilder(href));
             if (content is not null)
             {
-                var resolvedContent = ResolveIContent(content, options);
+                var resolvedContent = ResolveIContent(content, options: options);
                 if (resolvedContent is not null)
                 {
                     return resolvedContent;
@@ -70,10 +71,10 @@ namespace Blend.Optimizely
             if (content is null)
                 return new ResolvedLink(url.ToString(), null);
 
-            return ResolveIContent(content, options);
+            return ResolveIContent(content, options: options);
         }
 
-        public virtual ResolvedLink? ResolveIContent(IContent content, LinkOptions options = LinkOptions.None)
+        public virtual ResolvedLink? ResolveIContent(IContent content, string languageBranchId = "", LinkOptions options = LinkOptions.None)
         {
             string? target = null;
             string? href;
@@ -86,12 +87,16 @@ namespace Blend.Optimizely
                     target = targetFrame.FrameName;
                 }
 
-
-                href = ResolvePagedataHref(pageData, options);
+                href = ResolvePagedataHref(pageData, options, languageBranchId);
             }
             else
             {
                 href = UrlResolver.Service.GetUrl(content);
+
+                if (!string.IsNullOrWhiteSpace(languageBranchId))
+                {
+                    href = UrlResolver.Service.GetUrl(content.ContentLink, languageBranchId);
+                }
 
                 if (options.HasFlag(LinkOptions.IncludeDomain))
                 {
@@ -102,14 +107,16 @@ namespace Blend.Optimizely
             return new ResolvedLink(href, target);
         }
 
-        protected virtual string? ResolvePagedataHref(PageData pageData, LinkOptions options)
+        protected virtual string? ResolvePagedataHref(PageData pageData, LinkOptions options, string languageBranchId = "")
         {
             switch (pageData.LinkType)
             {
                 case PageShortcutType.Inactive:
                     return null;
+
                 case PageShortcutType.External:
                     return pageData.LinkURL;
+
                 case PageShortcutType.Shortcut:
                     if (!options.HasFlag(LinkOptions.IgnoreInternalShortcuts))
                     {
@@ -118,7 +125,7 @@ namespace Blend.Optimizely
                         {
                             if (ContentLoader.Service.TryGet(shortcutLink, out PageData shortcutPage))
                             {
-                                return ResolvePagedataHref(shortcutPage, options);
+                                return ResolvePagedataHref(shortcutPage, options, languageBranchId);
                             }
                         }
                     }
@@ -126,6 +133,11 @@ namespace Blend.Optimizely
             }
 
             string href = UrlResolver.Service.GetUrl(pageData);
+
+            if (!string.IsNullOrWhiteSpace(languageBranchId))
+            {
+                href = UrlResolver.Service.GetUrl(pageData.ContentLink, languageBranchId);
+            }
 
             if (options.HasFlag(LinkOptions.IncludeDomain))
             {
@@ -162,9 +174,15 @@ namespace Blend.Optimizely
             if (!ContentLoader.Service.TryGet(contentReference, out IContent content))
                 return null;
 
-            return ResolveIContent(content, options);
+            return ResolveIContent(content, options: options);
         }
 
-    }
+        public virtual ResolvedLink? ResolveContentReference(ContentReference contentReference, string languageBranchId, LinkOptions options = LinkOptions.None)
+        {
+            if (!ContentLoader.Service.TryGet(contentReference, CultureInfo.GetCultureInfo(languageBranchId), out IContent content))
+                return null;
 
+            return ResolveIContent(content, languageBranchId, options);
+        }
+    }
 }
