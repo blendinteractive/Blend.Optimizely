@@ -26,7 +26,7 @@ namespace Blend.Optimizely
             var resolvedLink = contentLink switch
             {
                 IResolvable resolvable => resolvable.Resolve(options),
-                IContent content => ResolveIContent(content, languageBranchId, options),
+                IContent content => ResolveIContent(content, options, languageBranchId),
                 Url url => ResolveUrl(url, options),
                 LinkItem linkItem => ResolveLinkItem(linkItem, options),
                 ContentReference contentReference => ResolveContentReference(contentReference, options),
@@ -65,16 +65,19 @@ namespace Blend.Optimizely
             return new ResolvedLink(href, null);
         }
 
-        public virtual ResolvedLink? ResolveUrl(Url url, LinkOptions options = LinkOptions.None)
+        public virtual ResolvedLink? ResolveUrl(Url url, LinkOptions options = LinkOptions.None, string languageBranchId = "")
         {
             var content = UrlResolver.Service.Route(new UrlBuilder(url));
-            if (content is null)
-                return new ResolvedLink(url.ToString(), null);
 
-            return ResolveIContent(content, options: options);
+            if (content is null)
+            {
+                return new ResolvedLink(url.ToString(), null);
+            }
+
+            return ResolveIContent(content, options: options, languageBranchId);
         }
 
-        public virtual ResolvedLink? ResolveIContent(IContent content, string languageBranchId = "", LinkOptions options = LinkOptions.None)
+        public virtual ResolvedLink? ResolveIContent(IContent content, LinkOptions options = LinkOptions.None, string languageBranchId = "")
         {
             string? target = null;
             string? href;
@@ -91,12 +94,9 @@ namespace Blend.Optimizely
             }
             else
             {
-                href = UrlResolver.Service.GetUrl(content);
-
-                if (!string.IsNullOrWhiteSpace(languageBranchId))
-                {
-                    href = UrlResolver.Service.GetUrl(content.ContentLink, languageBranchId);
-                }
+                href = string.IsNullOrWhiteSpace(languageBranchId) ?
+                    UrlResolver.Service.GetUrl(content) :
+                    UrlResolver.Service.GetUrl(content.ContentLink, languageBranchId);
 
                 if (options.HasFlag(LinkOptions.IncludeDomain))
                 {
@@ -132,12 +132,9 @@ namespace Blend.Optimizely
                     break;
             }
 
-            string href = UrlResolver.Service.GetUrl(pageData);
-
-            if (!string.IsNullOrWhiteSpace(languageBranchId))
-            {
-                href = UrlResolver.Service.GetUrl(pageData.ContentLink, languageBranchId);
-            }
+            string href = string.IsNullOrWhiteSpace(languageBranchId) ?
+                UrlResolver.Service.GetUrl(pageData) :
+                UrlResolver.Service.GetUrl(pageData.ContentLink, languageBranchId);
 
             if (options.HasFlag(LinkOptions.IncludeDomain))
             {
@@ -177,12 +174,14 @@ namespace Blend.Optimizely
             return ResolveIContent(content, options: options);
         }
 
-        public virtual ResolvedLink? ResolveContentReference(ContentReference contentReference, string languageBranchId, LinkOptions options = LinkOptions.None)
+        public virtual ResolvedLink? ResolveContentReference(ContentReference contentReference, LinkOptions options = LinkOptions.None, string languageBranchId = "")
         {
             if (!ContentLoader.Service.TryGet(contentReference, CultureInfo.GetCultureInfo(languageBranchId), out IContent content))
+            {
                 return null;
+            }
 
-            return ResolveIContent(content, languageBranchId, options);
+            return ResolveIContent(content, options, languageBranchId);
         }
     }
 }
