@@ -46,15 +46,15 @@ namespace Blend.Optimizely
             return contentLoader.Service.GetChildren<TContent>(contentLink);
         }
 
-        private static string? GetFetchDataFriendlyUrl(ContentReference contentReference, GetFriendlyUrlOption options, string? actionName, string? language)
+        private static string? GetFetchDataFriendlyUrl(ContentReference contentReference, GetFriendlyUrlOption options, string? actionName, string? languageBranchId)
         {
             PageData asContent;
             try
             {
-                if (!language.HasValue())
+                if (!languageBranchId.HasValue())
                     asContent = contentLoader.Service.Get<PageData>(contentReference);
                 else
-                    asContent = contentLoader.Service.Get<PageData>(contentReference, CultureInfo.GetCultureInfo(language));
+                    asContent = contentLoader.Service.Get<PageData>(contentReference, CultureInfo.GetCultureInfo(languageBranchId));
             }
             catch (ContentNotFoundException)
             {
@@ -68,7 +68,7 @@ namespace Blend.Optimizely
             if (!int.TryParse(pageShortcutLink, out int shortcutContentId))
                 return null;
 
-            return GetFriendlyUrl(new ContentReference(shortcutContentId), options, actionName, language);
+            return GetFriendlyUrl(new ContentReference(shortcutContentId), options, actionName, languageBranchId);
         }
 
         /// <summary>
@@ -78,13 +78,13 @@ namespace Blend.Optimizely
         /// <param name="includeHost">Mark if include host name in the url.</param>
         /// <returns>String representation of URL for provided content reference.</returns>
         [Obsolete("Use ResolveUrl extension method instead")]
-        public static string GetFriendlyUrl(this ContentReference contentReference, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? actionName = null, string? language = null)
+        public static string GetFriendlyUrl(this ContentReference contentReference, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? actionName = null, string? languageBranchId = null)
         {
             if (!contentReference.HasValue()) return string.Empty;
 
             if ((options & GetFriendlyUrlOption.FollowShortcuts) != 0)
             {
-                var fetchedUrl = GetFetchDataFriendlyUrl(contentReference, options, actionName, language);
+                var fetchedUrl = GetFetchDataFriendlyUrl(contentReference, options, actionName, languageBranchId);
                 if (fetchedUrl != null)
                 {
                     return fetchedUrl;
@@ -94,14 +94,13 @@ namespace Blend.Optimizely
             string url;
             if (actionName == null)
             {
-                if (!language.HasValue())
-                    url = urlResolver.Service.GetUrl(contentReference);
-                else
-                    url = urlResolver.Service.GetUrl(contentReference, language);
+                url = !languageBranchId.HasValue() ?
+                    urlResolver.Service.GetUrl(contentReference) :
+                    urlResolver.Service.GetUrl(contentReference, languageBranchId);
             }
             else
             {
-                url = contentReference.GetUrlWithAction(actionName, language);
+                url = contentReference.GetUrlWithAction(actionName, languageBranchId);
             }
 
             return GetFriendlyUrl(url, options);
@@ -148,7 +147,6 @@ namespace Blend.Optimizely
         [Obsolete("Use ResolveUrl extension method instead")]
         public static string GetFriendlyUrl(this PageData pageData, GetFriendlyUrlOption options = GetFriendlyUrlOption.None) => GetFriendlyUrl(pageData.ContentLink, options);
 
-
         public static string? ResolveUrl(this LinkItem linkItem, LinkOptions options = LinkOptions.None)
         {
             var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveLinkItem(linkItem, options);
@@ -157,9 +155,9 @@ namespace Blend.Optimizely
             return resolved.Href;
         }
 
-        public static string? ResolveUrl(this IContent content, LinkOptions options = LinkOptions.None)
+        public static string? ResolveUrl(this IContent content, LinkOptions options = LinkOptions.None, string languageBranchId = "")
         {
-            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveIContent(content, options);
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveIContent(content, options, languageBranchId);
             if (resolved is null)
                 return null;
             return resolved.Href;
@@ -173,6 +171,14 @@ namespace Blend.Optimizely
             return resolved.Href;
         }
 
+        public static string? ResolveUrl(this ContentReference content, LinkOptions options = LinkOptions.None, string languageBranchId = "")
+        {
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveContentReference(content, options, languageBranchId);
+            if (resolved is null)
+                return null;
+            return resolved.Href;
+        }
+
         public static string? ResolveUrl(this Url url, LinkOptions options = LinkOptions.None)
         {
             var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveUrl(url, options);
@@ -181,6 +187,13 @@ namespace Blend.Optimizely
             return resolved.Href;
         }
 
+        public static string? ResolveUrl(this Url url, LinkOptions options = LinkOptions.None, string languageBrachId = "")
+        {
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveUrl(url, options);
+            if (resolved is null)
+                return null;
+            return resolved.Href;
+        }
 
         /// <summary>
         /// Recursively looks for parent pages with matching PageTypName
@@ -249,6 +262,4 @@ namespace Blend.Optimizely
 
         Canonical = UseSiteDefinitionHost | FollowShortcuts
     }
-
-
 }
