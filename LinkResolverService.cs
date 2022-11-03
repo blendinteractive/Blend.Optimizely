@@ -40,7 +40,7 @@ namespace Blend.Optimizely
 
         public virtual ResolvedLink? ResolveLinkItem(LinkItem linkItem, LinkOptions options = LinkOptions.None)
         {
-            var resolvedUrl = ResolveUrlString(linkItem.Href);
+            var resolvedUrl = ResolveUrlString(linkItem.Href, options);
             if (resolvedUrl is null)
                 return null;
 
