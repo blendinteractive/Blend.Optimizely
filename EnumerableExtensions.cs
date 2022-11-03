@@ -66,21 +66,21 @@ namespace Blend.Optimizely
         /// <typeparam name="T"></typeparam>
         /// <param name="contentLinks"></param>
         /// <returns></returns>
-        public static IEnumerable<T> AsContent<T>(this IEnumerable<ContentReference> contentLinks) =>
-            contentLinks.HasValue() ?
-            contentLinks.Select(x => ContentLoader.Service.Get<IContent>(x)).OfType<T>() :
-            Enumerable.Empty<T>();
+        public static IEnumerable<T> AsContent<T>(this IEnumerable<ContentReference>? contentLinks) where T : ContentData
+        {
+            if (contentLinks is null)
+                return Enumerable.Empty<T>();
 
-        /// <summary>
-        /// Converts an Enumerable of Content references into an enumerable of content type T
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="contentLinks"></param>
-        /// <returns></returns>
-        public static IEnumerable<T> AsContent<T>(this IList<ContentReference> contentLinks) =>
-            contentLinks.HasValue() ?
-            contentLinks.Select(x => ContentLoader.Service.Get<IContent>(x)).OfType<T>() :
-            Enumerable.Empty<T>();
+            var list = new List<T>();
+            foreach (var item in contentLinks)
+            {
+                if (ContentLoader.Service.TryGet(item, out T contentItem))
+                {
+                    list.Add(contentItem);
+                }
+            }
+            return list;
+        }
 
         public static void AddValuesToCollection(this NameValueCollection addTo, NameValueCollection addFrom)
         {
@@ -156,8 +156,11 @@ namespace Blend.Optimizely
             }
         }
 
-        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        public static void ForEach<T>(this IEnumerable<T>? source, Action<T> action)
         {
+            if (source is null)
+                return;
+
             foreach (var element in source)
                 action(element);
         }
