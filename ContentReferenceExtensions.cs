@@ -163,14 +163,6 @@ namespace Blend.Optimizely
             return resolved.Href;
         }
 
-        public static string? ResolveUrl(this ContentReference content, LinkOptions options = LinkOptions.None)
-        {
-            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveContentReference(content, options);
-            if (resolved is null)
-                return null;
-            return resolved.Href;
-        }
-
         public static string? ResolveUrl(this ContentReference content, LinkOptions options = LinkOptions.None, string languageBranchId = "")
         {
             var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveContentReference(content, options, languageBranchId);
@@ -179,17 +171,9 @@ namespace Blend.Optimizely
             return resolved.Href;
         }
 
-        public static string? ResolveUrl(this Url url, LinkOptions options = LinkOptions.None)
-        {
-            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveUrl(url, options);
-            if (resolved is null)
-                return null;
-            return resolved.Href;
-        }
-
         public static string? ResolveUrl(this Url url, LinkOptions options = LinkOptions.None, string languageBrachId = "")
         {
-            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveUrl(url, options);
+            var resolved = ServiceLocator.Current.GetInstance<LinkResolverService>().ResolveUrl(url, options, languageBrachId);
             if (resolved is null)
                 return null;
             return resolved.Href;
