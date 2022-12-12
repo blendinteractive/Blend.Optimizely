@@ -66,7 +66,7 @@ namespace Blend.Optimizely
         /// <typeparam name="T"></typeparam>
         /// <param name="contentLinks"></param>
         /// <returns></returns>
-        public static IEnumerable<T> AsContent<T>(this IEnumerable<ContentReference>? contentLinks) where T : ContentData
+        public static IEnumerable<T> AsContent<T>(this IEnumerable<ContentReference>? contentLinks) where T : IContentData
         {
             if (contentLinks is null)
                 return Enumerable.Empty<T>();
