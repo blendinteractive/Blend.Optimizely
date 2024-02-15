@@ -24,9 +24,19 @@ namespace Blend.Optimizely
 
             foreach (var item in contentArea.FilteredItems)
             {
-                if (ContentLoader.Service.TryGet(item.ContentLink, out T contentItem))
+                if (item.ContentLink.HasValue())
                 {
-                    list.Add(contentItem);
+                    if (ContentLoader.Service.TryGet(item.ContentLink, out T contentItem))
+                    {
+                        list.Add(contentItem);
+                    }
+                }
+                else
+                {
+                    if (item.InlineBlock is T contentData)
+                    {
+                        list.Add(contentData);
+                    }
                 }
             }
 
