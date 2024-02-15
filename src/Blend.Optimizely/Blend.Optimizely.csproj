@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Version>3.0.0</Version>
+    <PackageVersion>3.0.0</PackageVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+    <Authors>Blend Interactive</Authors>
+    <Company>Blend Interactive</Company>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RootNamespace>Blend.Optimizely</RootNamespace>
+    <LangVersion>Latest</LangVersion>
+    <!-- NuGet Package Information -->
+    <PackageId>Blend.Optimizely</PackageId>
+    <PackageProjectUrl>https://github.com/blendinteractive/Blend.Optimizely</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/blendinteractive/Blend.Optimizely.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Optimizely</PackageTags>
+    <IsPackable>true</IsPackable>
+    <Description>Collection of helpful utilities for Optimizely CMS 12 sites</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPiServer.CMS" Version="[12.24.0,13.0)" />
+	<PackageReference Include="EPiServer.Framework" Version="[12.19.0, 13.0)" />
+  </ItemGroup>
+</Project>
