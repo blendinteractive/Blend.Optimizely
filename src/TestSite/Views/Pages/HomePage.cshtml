@@ -1,0 +1,13 @@
+﻿@model TestSite.Models.Pages.HomePage
+
+@using Blend.Optimizely
+
+
+<h1>Content:</h1>
+
+@foreach (var block in Model.Body.AsContent<TestSite.Models.Blocks.RichTextBlock>())
+{
+    <div>
+        @Html.XhtmlString(block.Body)
+    </div>
+}

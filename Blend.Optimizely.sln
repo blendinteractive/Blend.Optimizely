@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blend.Optimizely", "Blend.Optimizely.csproj", "{9942FB27-1CB6-43B7-92A4-1FD69B166966}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blend.Optimizely", "src\Blend.Optimizely\Blend.Optimizely.csproj", "{430394DE-AD77-4C7D-B411-6F6D14736D1C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSite", "src\TestSite\TestSite.csproj", "{184C2971-0115-4A07-839A-38930D421131}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9942FB27-1CB6-43B7-92A4-1FD69B166966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9942FB27-1CB6-43B7-92A4-1FD69B166966}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9942FB27-1CB6-43B7-92A4-1FD69B166966}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9942FB27-1CB6-43B7-92A4-1FD69B166966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{430394DE-AD77-4C7D-B411-6F6D14736D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{430394DE-AD77-4C7D-B411-6F6D14736D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{430394DE-AD77-4C7D-B411-6F6D14736D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{430394DE-AD77-4C7D-B411-6F6D14736D1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{184C2971-0115-4A07-839A-38930D421131}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{184C2971-0115-4A07-839A-38930D421131}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{184C2971-0115-4A07-839A-38930D421131}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{184C2971-0115-4A07-839A-38930D421131}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
