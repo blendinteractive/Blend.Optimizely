@@ -1,4 +1,6 @@
-﻿namespace TestSite.Models.Pages;
+﻿using EPiServer.SpecializedProperties;
+
+namespace TestSite.Models.Pages;
 
 
 [ContentType(
@@ -8,4 +10,6 @@
 public class HomePage : PageData
 {
     public virtual ContentArea? Body { get; set; }
+
+    public virtual LinkItemCollection? Links { get; set; }
 }

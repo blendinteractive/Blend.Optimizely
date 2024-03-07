@@ -4,8 +4,10 @@ using EPiServer.ServiceLocation;
 using EPiServer.SpecializedProperties;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Globalization;
+using System.Web;
 
 namespace Blend.Optimizely
 {
@@ -58,11 +60,54 @@ namespace Blend.Optimizely
                 var resolvedContent = ResolveIContent(content, options: options);
                 if (resolvedContent is not null)
                 {
+                    string remaining = ExtractRemainingUrl(href);
+                    resolvedContent = resolvedContent.AddAdditional(remaining);
                     return resolvedContent;
                 }
             }
 
             return new ResolvedLink(href, null);
+        }
+
+        private string ExtractRemainingUrl(string href)
+        {
+            var url = new UrlBuilder(href);
+            string remaining = "";
+            if (url.QueryCollection is not null)
+            {
+                var epsremainingpath = url.QueryCollection["epsremainingpath"];
+                if (!string.IsNullOrEmpty(epsremainingpath))
+                {
+                    remaining = epsremainingpath;
+                }
+
+                bool anyParameters = false;
+                foreach (string key in url.QueryCollection)
+                {
+                    if (key is null || string.Compare(key, "epsremainingpath", true) == 0)
+                        continue;
+                    var value = url.QueryCollection[key];
+                    string keyValuePair = $"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(value ?? "")}";
+
+                    if (!anyParameters)
+                    {
+                        remaining += "?";
+                        anyParameters = true;
+                    }
+                    else
+                    {
+                        remaining += "&";
+                    }
+                    remaining += keyValuePair;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(url.Fragment))
+            {
+                remaining += url.Fragment;
+            }
+
+            return remaining;
         }
 
         public virtual ResolvedLink? ResolveUrl(Url url, LinkOptions options = LinkOptions.None, string languageBranchId = "")
