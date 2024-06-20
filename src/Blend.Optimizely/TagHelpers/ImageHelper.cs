@@ -1,11 +1,12 @@
 ﻿using EPiServer;
 using EPiServer.Core;
+using EPiServer.ServiceLocation;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Blend.Optimizely.TagHelpers
 {
-
     [HtmlTargetElement("Image", Attributes = "src", TagStructure = TagStructure.WithoutEndTag)]
     public class ImageHelper : TagHelper
     {
@@ -21,39 +22,44 @@ namespace Blend.Optimizely.TagHelpers
                 return;
             }
 
-            var image = src.Get<IImageFile>(); // NOTE: This is likely to be a breaking change - Switching from `ImageFile` to `IImageFile`
             var imgUrl = src.ResolveUrl();
-
-            if (image == null || !imgUrl.HasValue())
+            if (!imgUrl.HasValue())
             {
                 output.SuppressOutput();
                 return;
             }
 
+            var imageVariations = new List<string>();
+
+            var loader = ServiceLocator.Current.GetInstance<IContentLoader>();
+            if (loader.TryGet<IImageFile>(src, out var image))
+            {
+                output.Attributes.SetAttribute("alt", image.GetAltText());
+
+                if (image.Width > 0)
+                    output.Attributes.SetAttribute("width", image.Width);
+
+                if (image.Height > 0)
+                    output.Attributes.SetAttribute("height", image.Height);
+
+                imageVariations = image.ImageOptions().Where(x => x != image.Width).Select(x =>
+                {
+                    var url = new UrlBuilder(imgUrl);
+                    url.QueryCollection.Add("width", x.ToString());
+                    return (string)url + $" {x}w";
+                }).ToList();
+
+                if (imageVariations.HasValue())
+                {
+                    imageVariations.Add($"{imgUrl} {image.Width}w");
+                    output.Attributes.SetAttribute("srcset", string.Join($", ", imageVariations));
+                    output.Attributes.SetAttribute("sizes", "100vw");
+                }
+            }
+
             output.TagName = "img";
             output.TagMode = TagMode.SelfClosing;
             output.Attributes.SetAttribute("src", imgUrl);
-            output.Attributes.SetAttribute("alt", image.GetAltText()); // NOTE: This is likely to be a breaking change - Switching from `ContentReference` to `IImageFile`
-
-            if (image.Width > 0)
-                output.Attributes.SetAttribute("width", image.Width);
-
-            if (image.Height > 0)
-                output.Attributes.SetAttribute("height", image.Height);
-
-            var imageVariations = image.ImageOptions().Where(x => x != image.Width).Select(x =>
-            {
-                var url = new UrlBuilder(imgUrl);
-                url.QueryCollection.Add("width", x.ToString());
-                return (string)url + $" {x}w";
-            }).ToList();
-
-            if (imageVariations.HasValue())
-            {
-                imageVariations.Add($"{imgUrl} {image.Width}w");
-                output.Attributes.SetAttribute("srcset", string.Join($", ", imageVariations));
-                output.Attributes.SetAttribute("sizes", "100vw");
-            }
 
             if (!EagerLoading)
                 output.Attributes.SetAttribute("loading", "lazy");
