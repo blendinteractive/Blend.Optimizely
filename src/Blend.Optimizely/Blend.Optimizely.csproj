@@ -4,10 +4,10 @@
 	<TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <Version>3.0.0</Version>
-    <PackageVersion>3.0.0</PackageVersion>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
+    <Version>3.0.1</Version>
+    <PackageVersion>3.0.1</PackageVersion>
+    <AssemblyVersion>3.0.1.0</AssemblyVersion>
+    <FileVersion>3.0.1.0</FileVersion>
     <Authors>Blend Interactive</Authors>
     <Company>Blend Interactive</Company>
     <GenerateDocumentationFile>False</GenerateDocumentationFile>
