@@ -14,3 +14,8 @@
 
 
 @Html.PropertyFor(x => x.Links)
+
+@if (Model.TestUrl.HasValue())
+{
+    <a href="@Model.TestUrl.ResolveUrl()">Test URL</a>
+}

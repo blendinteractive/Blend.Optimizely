@@ -12,4 +12,6 @@ public class HomePage : PageData
     public virtual ContentArea? Body { get; set; }
 
     public virtual LinkItemCollection? Links { get; set; }
+
+    public virtual Url? TestUrl { get; set; }
 }

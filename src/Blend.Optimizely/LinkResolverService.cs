@@ -114,12 +114,18 @@ namespace Blend.Optimizely
         {
             var content = UrlResolver.Service.Route(new UrlBuilder(url));
 
-            if (content is null)
+            if (content is not null)
             {
-                return new ResolvedLink(url.ToString(), null);
+                var resolvedContent = ResolveIContent(content, options: options, languageBranchId);
+                if (resolvedContent is not null)
+                {
+                    resolvedContent = resolvedContent.AddAdditional(url.Query);
+                    resolvedContent = resolvedContent.AddAdditional(url.Fragment);
+                    return resolvedContent;
+                }
             }
 
-            return ResolveIContent(content, options: options, languageBranchId);
+            return new ResolvedLink(url.ToString(), null);
         }
 
         public virtual ResolvedLink? ResolveIContent(IContent content, LinkOptions options = LinkOptions.None, string languageBranchId = "")
