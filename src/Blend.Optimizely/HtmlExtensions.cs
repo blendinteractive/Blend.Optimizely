@@ -53,8 +53,6 @@ namespace Blend.Optimizely
         {
             ModelExpression modelExpression = html.ViewContext.HttpContext.RequestServices.GetRequiredService<ModelExpressionProvider>().CreateModelExpression(html.ViewData, expression);
 
-            var hasValue = modelExpression.Model != null;
-
             var displayFor = html.DisplayFor(expression);
 
             var contextModeResolver = ServiceLocator.Current.GetInstance<IContextModeResolver>();
@@ -66,7 +64,7 @@ namespace Blend.Optimizely
             }
 
             // view mode with value
-            if (hasValue)
+            if (modelExpression.Model.HasValue())
             {
                 return RenderPropertyForViewMode(htmlTagName, innerHtmlTagName, htmlAttributes, displayFor);
             }
