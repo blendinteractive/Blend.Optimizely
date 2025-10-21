@@ -1,6 +1,7 @@
 ﻿using EPiServer;
 using EPiServer.Core;
 using EPiServer.SpecializedProperties;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -27,6 +28,19 @@ namespace Blend.Optimizely
         public static bool HasValue<T>([NotNullWhen(true)] this IEnumerable<T>? array) => array != null && array.Any();
 
         public static bool HasValue([NotNullWhen(true)] this LinkItem? item) => item != null && item.Text.HasValue() && item.Href.HasValue();
+
+        public static bool HasValue([NotNullWhen(true)] this object? value) => value switch
+        {
+            ContentReference contentReference => contentReference.HasValue(),
+            ContentArea contentArea => contentArea.HasValue(),
+            XhtmlString xhtmlString => xhtmlString.HasValue(),
+            string stringValue => stringValue.HasValue(),
+            Url url => url.HasValue(),
+            LinkItemCollection linkItemCollection => linkItemCollection.HasValue(),
+            IEnumerable iEnumerable => iEnumerable.HasValue(),
+            LinkItem linkItem => linkItem.HasValue(),
+            _ => value != null
+        };
 
         public static ContentReference Coalesce(this ContentReference? value, ContentReference alternative) => value.HasValue() ? value : alternative;
 
