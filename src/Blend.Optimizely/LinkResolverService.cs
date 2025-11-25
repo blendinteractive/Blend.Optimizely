@@ -6,6 +6,7 @@ using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Web;
 
@@ -160,6 +161,12 @@ namespace Blend.Optimizely
 
         protected virtual string? ResolvePagedataHref(PageData pageData, LinkOptions options, string languageBranchId = "")
         {
+            return SafeResolvePagedataHref(pageData, options, languageBranchId, new HashSet<int>());
+        }
+
+
+        private string? SafeResolvePagedataHref(PageData pageData, LinkOptions options, string languageBranchId, HashSet<int> contentIds)
+        {
             switch (pageData.LinkType)
             {
                 case PageShortcutType.Inactive:
@@ -172,11 +179,20 @@ namespace Blend.Optimizely
                     if (!options.HasFlag(LinkOptions.IgnoreInternalShortcuts))
                     {
                         var shortcutLink = pageData.Property["PageShortcutLink"]?.Value as ContentReference;
+
                         if (shortcutLink is not null)
                         {
+                            // Shortcut any self-referencial page shortcuts.
+                            // Can be an issue when page A redirects to B, and B redirects to A (for example)
+                            // Prevents stackoverflow error.
+                            if (contentIds.Contains(shortcutLink.ID))
+                                return null;
+
+                            contentIds.Add(shortcutLink.ID);
+
                             if (ContentLoader.Service.TryGet(shortcutLink, out PageData shortcutPage))
                             {
-                                return ResolvePagedataHref(shortcutPage, options, languageBranchId);
+                                return SafeResolvePagedataHref(shortcutPage, options, languageBranchId, contentIds);
                             }
                         }
                     }
