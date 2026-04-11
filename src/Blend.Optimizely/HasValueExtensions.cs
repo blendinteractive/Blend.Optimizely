@@ -15,7 +15,7 @@ namespace Blend.Optimizely
     {
         public static bool HasValue([NotNullWhen(true)] this  ContentReference? reference) => !ContentReference.IsNullOrEmpty(reference);
 
-        public static bool HasValue([NotNullWhen(true)] this ContentArea? contentArea) => contentArea != null && contentArea.FilteredItems.Any();
+        public static bool HasValueUnfiltered([NotNullWhen(true)] this ContentArea? contentArea) => contentArea != null && contentArea.Items.Any();
 
         public static bool HasValue([NotNullWhen(true)] this XhtmlString? htmlString) => htmlString != null && !string.IsNullOrEmpty(htmlString.ToHtmlString());
 

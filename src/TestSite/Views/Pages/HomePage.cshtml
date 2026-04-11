@@ -2,10 +2,12 @@
 
 @using Blend.Optimizely
 
-
+@{
+    var richTextBlocks = await Model.Body.AsContentAsync<TestSite.Models.Blocks.RichTextBlock>();
+}
 <h1>Content:</h1>
 
-@foreach (var block in Model.Body.AsContent<TestSite.Models.Blocks.RichTextBlock>())
+@foreach (var block in richTextBlocks)
 {
     <div>
         @Html.XhtmlString(block.Body)

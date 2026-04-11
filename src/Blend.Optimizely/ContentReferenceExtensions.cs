@@ -1,4 +1,5 @@
 ﻿using EPiServer;
+using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.ServiceLocation;
 using EPiServer.SpecializedProperties;
@@ -15,6 +16,10 @@ namespace Blend.Optimizely
         private static Injected<IContentLoader> contentLoader;
 
         private static Injected<UrlResolver> urlResolver;
+
+        private static Injected<SystemDefinition> systemDefinition;
+
+        private static Injected<IApplicationResolver> applicationResolver;
 
         /// <summary>
         /// Gets the specific language of content item represented by the provided reference.
@@ -45,107 +50,6 @@ namespace Blend.Optimizely
 
             return contentLoader.Service.GetChildren<TContent>(contentLink);
         }
-
-        private static string? GetFetchDataFriendlyUrl(ContentReference contentReference, GetFriendlyUrlOption options, string? actionName, string? languageBranchId)
-        {
-            PageData asContent;
-            try
-            {
-                if (!languageBranchId.HasValue())
-                    asContent = contentLoader.Service.Get<PageData>(contentReference);
-                else
-                    asContent = contentLoader.Service.Get<PageData>(contentReference, CultureInfo.GetCultureInfo(languageBranchId));
-            }
-            catch (ContentNotFoundException)
-            {
-                return null;
-            }
-
-            if (asContent.LinkType != PageShortcutType.FetchData)
-                return null;
-
-            var pageShortcutLink = asContent.Property["PageShortcutLink"].ToString();
-            if (!int.TryParse(pageShortcutLink, out int shortcutContentId))
-                return null;
-
-            return GetFriendlyUrl(new ContentReference(shortcutContentId), options, actionName, languageBranchId);
-        }
-
-        /// <summary>
-        /// Returns friendly URL for provided content reference.
-        /// </summary>
-        /// <param name="contentReference">Content reference for which to create friendly url.</param>
-        /// <param name="includeHost">Mark if include host name in the url.</param>
-        /// <returns>String representation of URL for provided content reference.</returns>
-        [Obsolete("Use ResolveUrl extension method instead")]
-        public static string GetFriendlyUrl(this ContentReference contentReference, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? actionName = null, string? languageBranchId = null)
-        {
-            if (!contentReference.HasValue()) return string.Empty;
-
-            if ((options & GetFriendlyUrlOption.FollowShortcuts) != 0)
-            {
-                var fetchedUrl = GetFetchDataFriendlyUrl(contentReference, options, actionName, languageBranchId);
-                if (fetchedUrl != null)
-                {
-                    return fetchedUrl;
-                }
-            }
-
-            string url;
-            if (actionName == null)
-            {
-                url = !languageBranchId.HasValue() ?
-                    urlResolver.Service.GetUrl(contentReference) :
-                    urlResolver.Service.GetUrl(contentReference, languageBranchId);
-            }
-            else
-            {
-                url = contentReference.GetUrlWithAction(actionName, languageBranchId);
-            }
-
-            return GetFriendlyUrl(url, options);
-        }
-
-        public static string GetNonContentFriendlyUrl(object nonConentObject, GetFriendlyUrlOption options = GetFriendlyUrlOption.None, string? language = null, VirtualPathArguments? virtualPathArguments = null)
-        {
-            var urlResolver = ServiceLocator.Current.GetInstance<UrlResolver>();
-            var url = urlResolver.GetVirtualPathForNonContent(nonConentObject, language, virtualPathArguments).GetUrl();
-            return GetFriendlyUrl(url, options);
-        }
-
-        [Obsolete("Use LinkResolverService instead")]
-        public static string GetFriendlyUrl(string url, GetFriendlyUrlOption options = GetFriendlyUrlOption.None)
-        {
-            bool useSiteDefinitionHost = (options & GetFriendlyUrlOption.UseSiteDefinitionHost) != 0;
-            if (useSiteDefinitionHost)
-                options |= GetFriendlyUrlOption.IncludeHost;
-
-            bool includeHost = (options & GetFriendlyUrlOption.IncludeHost) != 0;
-            bool forceHttps = ((options & GetFriendlyUrlOption.ForceHttps) != 0);
-
-            if (!includeHost && !forceHttps)
-            {
-                return url;
-            }
-
-            Uri siteUri = SiteDefinition.Current.SiteUrl;
-
-            var urlBuilder = new UrlBuilder(url)
-            {
-                Scheme = siteUri.Scheme,
-                Host = siteUri.Host,
-                Port = siteUri.Port
-            };
-            if (forceHttps)
-            {
-                urlBuilder.Port = 443;
-                urlBuilder.Scheme = Uri.UriSchemeHttps;
-            }
-            return urlBuilder.ToString();
-        }
-
-        [Obsolete("Use ResolveUrl extension method instead")]
-        public static string GetFriendlyUrl(this PageData pageData, GetFriendlyUrlOption options = GetFriendlyUrlOption.None) => GetFriendlyUrl(pageData.ContentLink, options);
 
         public static string? ResolveUrl(this LinkItem linkItem, LinkOptions options = LinkOptions.None)
         {
@@ -211,9 +115,13 @@ namespace Blend.Optimizely
             if (!contentLink.HasValue())
                 throw new NotSupportedException("Current top page cannot be retrieved without a starting point, and the specified page link was empty");
 
+            if (!(applicationResolver.Service.GetByContext() is Website webapp))
+                throw new NotSupportedException("GetAncestorBelowStart is currently only supported on Wesite applications");
+
+
             var page = contentLink.Get<PageData>();
-            var rootPage = SiteDefinition.Current.RootPage;
-            var startPage = SiteDefinition.Current.StartPage;
+            var rootPage = systemDefinition.Service.RootPage;
+            var startPage = webapp.EntryPoint;
 
             while (page.ParentLink.HasValue() &&
                 !page.ParentLink.CompareToIgnoreWorkID(rootPage) &&

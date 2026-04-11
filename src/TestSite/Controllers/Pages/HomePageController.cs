@@ -7,7 +7,7 @@ namespace TestSite.Controllers.Pages;
 
 public class HomePageController : PageController<HomePage>
 {
-    public virtual IActionResult Index(HomePage currentContent)
+    public virtual async Task<IActionResult> Index(HomePage currentContent)
     {
         var links = currentContent.Links.HasValue() ? currentContent.Links.Select(x => x.ResolveUrl()!).ToList() : Enumerable.Empty<string>();
 

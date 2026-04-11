@@ -1,4 +1,5 @@
 ﻿using EPiServer;
+using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
@@ -23,7 +24,7 @@ namespace Blend.Optimizely.ScheduledJobs
 
         protected readonly IContentRepository contentRepository;
 
-        protected readonly SiteDefinition siteDefinition;
+        protected readonly Application application;
 
         protected readonly UrlResolver urlResolver;
 
@@ -57,7 +58,7 @@ namespace Blend.Optimizely.ScheduledJobs
             this.contentLoader = locator.GetInstance<IContentLoader>();
             this.contentRepository = locator.GetInstance<IContentRepository>();
             this.contentTypeRepository = locator.GetInstance<IContentTypeRepository>();
-            this.siteDefinition = locator.GetInstance<SiteDefinition>();
+            this.application = locator.GetInstance<Application>();
             this.urlResolver = locator.GetInstance<UrlResolver>();
             this.blobFactory = locator.GetInstance<IBlobFactory>();
             this.mediaDataResolver = locator.GetInstance<ContentMediaResolver>();
@@ -194,16 +195,16 @@ namespace Blend.Optimizely.ScheduledJobs
             return String.Join(", ", reports) + timeReport;
         }
 
-        protected IEnumerable<PageData> GetAllPages()
+        protected IEnumerable<PageData> GetAllPages(ContentReference startPage)
         {
-            var contentReferences = this.contentLoader.GetDescendents(siteDefinition.StartPage);
+            var contentReferences = this.contentLoader.GetDescendents(startPage);
             return this.contentLoader.GetItems(contentReferences, new LoaderOptions())
                 .OfType<PageData>();
         }
 
-        protected IEnumerable<T> GetAllPages<T>() where T : ContentData
+        protected IEnumerable<T> GetAllPages<T>(ContentReference startPage) where T : ContentData
         {
-            var contentReferences = this.contentLoader.GetDescendents(siteDefinition.StartPage);
+            var contentReferences = this.contentLoader.GetDescendents(startPage);
             return this.contentLoader.GetItems(contentReferences, new LoaderOptions())
                 .OfType<T>();
         }
@@ -219,9 +220,9 @@ namespace Blend.Optimizely.ScheduledJobs
                 .OfType<T>();
         }
 
-        protected IEnumerable<ContentReference> GetAllPageReferences()
+        protected IEnumerable<ContentReference> GetAllPageReferences(ContentReference startPage)
         {
-            return this.contentLoader.GetDescendents(this.siteDefinition.StartPage);
+            return this.contentLoader.GetDescendents(startPage);
         }
 
         protected IEnumerable<PageData> GetAllPagesForEdit(ContentReference startReference)

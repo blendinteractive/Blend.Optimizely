@@ -1,4 +1,5 @@
 ﻿using EPiServer;
+using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.ServiceLocation;
 using EPiServer.SpecializedProperties;
@@ -17,7 +18,7 @@ namespace Blend.Optimizely
     {
         private Injected<IContentLoader> ContentLoader { get; }
 
-        private Injected<ISiteDefinitionResolver> SiteDefinitionResolver { get; }
+        private Injected<IApplicationResolver> ApplicationResolver { get; }
 
         private Injected<IUrlResolver> UrlResolver { get; }
 
@@ -216,14 +217,14 @@ namespace Blend.Optimizely
             var uri = new Uri(href, UriKind.RelativeOrAbsolute);
             if (!uri.IsAbsoluteUri)
             {
-                var siteDefinition = SiteDefinitionResolver.Service.GetByContent(contentReference, true);
-                if (siteDefinition is not null)
+                var siteDefinition = ApplicationResolver.Service.GetByContent(contentReference, true);
+                if (siteDefinition is Website webApp && webApp.Url is not null)
                 {
                     var urlBuilder = new UrlBuilder(href)
                     {
-                        Scheme = siteDefinition.SiteUrl.Scheme,
-                        Host = siteDefinition.SiteUrl.Host,
-                        Port = siteDefinition.SiteUrl.Port
+                        Scheme = webApp.Url.Scheme,
+                        Host = webApp.Url.Host,
+                        Port = webApp.Url.Port
                     };
 
                     return urlBuilder.ToString();
