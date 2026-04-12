@@ -107,6 +107,17 @@ namespace Blend.Optimizely
             return assetsFolder.ContentLink;
         }
 
+        private static ContentReference? GetEntryPoint()
+        {
+            var application = applicationResolver.Service.GetByContext();
+            return application switch
+            {
+                Website website => website.EntryPoint,
+                InProcessWebsite inProcessWebsite => inProcessWebsite.EntryPoint,
+                _ => null
+            };
+        }
+
         /// <summary>
         /// Get the ancestor page directly below the start page.
         /// </summary>
@@ -115,13 +126,9 @@ namespace Blend.Optimizely
             if (!contentLink.HasValue())
                 throw new NotSupportedException("Current top page cannot be retrieved without a starting point, and the specified page link was empty");
 
-            if (!(applicationResolver.Service.GetByContext() is Website webapp))
-                throw new NotSupportedException("GetAncestorBelowStart is currently only supported on Wesite applications");
-
-
             var page = contentLink.Get<PageData>();
             var rootPage = systemDefinition.Service.RootPage;
-            var startPage = webapp.EntryPoint;
+            var startPage = GetEntryPoint();
 
             while (page.ParentLink.HasValue() &&
                 !page.ParentLink.CompareToIgnoreWorkID(rootPage) &&

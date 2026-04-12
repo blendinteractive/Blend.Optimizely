@@ -212,19 +212,30 @@ namespace Blend.Optimizely
             return href;
         }
 
+        private static Uri? GetAppUri(Application? app)
+        {
+            return app switch
+            {
+                Website website => website.Url,
+                InProcessWebsite inProcess => inProcess.Url,
+                _ => null
+            };
+        }
+
         protected virtual string EnsureAbsoluteUrl(ContentReference contentReference, string href)
         {
             var uri = new Uri(href, UriKind.RelativeOrAbsolute);
             if (!uri.IsAbsoluteUri)
             {
                 var siteDefinition = ApplicationResolver.Service.GetByContent(contentReference, true);
-                if (siteDefinition is Website webApp && webApp.Url is not null)
+                var url = GetAppUri(siteDefinition);
+                if (url is not null)
                 {
                     var urlBuilder = new UrlBuilder(href)
                     {
-                        Scheme = webApp.Url.Scheme,
-                        Host = webApp.Url.Host,
-                        Port = webApp.Url.Port
+                        Scheme = url.Scheme,
+                        Host = url.Host,
+                        Port = url.Port
                     };
 
                     return urlBuilder.ToString();
