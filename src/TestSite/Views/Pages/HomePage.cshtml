@@ -7,6 +7,11 @@
 }
 <h1>Content:</h1>
 
+@if (Model.Body.HasValue())
+{
+    <p>No body to display.</p>
+}
+
 @foreach (var block in richTextBlocks)
 {
     <div>

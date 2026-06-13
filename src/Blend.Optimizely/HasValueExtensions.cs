@@ -1,6 +1,7 @@
 ﻿using EPiServer;
 using EPiServer.Core;
 using EPiServer.SpecializedProperties;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -17,6 +18,9 @@ namespace Blend.Optimizely
 
         public static bool HasValueUnfiltered([NotNullWhen(true)] this ContentArea? contentArea) => contentArea != null && contentArea.Items.Any();
 
+        [Obsolete("This calls `HasValueUnfiltered` which may not be what you want. Instead, use AsContentAsync or GetFilteredItemsAsync first, then check the results of that.")]
+        public static bool HasValue([NotNullWhen(true)] this ContentArea? contentArea) => contentArea != null && contentArea.Items.Any();
+
         public static bool HasValue([NotNullWhen(true)] this XhtmlString? htmlString) => htmlString != null && !string.IsNullOrEmpty(htmlString.ToHtmlString());
 
         public static bool HasValue([NotNullWhen(true)] this string? value) => !string.IsNullOrEmpty(value);
@@ -32,7 +36,7 @@ namespace Blend.Optimizely
         public static bool HasValue([NotNullWhen(true)] this object? value) => value switch
         {
             ContentReference contentReference => contentReference.HasValue(),
-            ContentArea contentArea => contentArea.HasValue(),
+            ContentArea contentArea => contentArea.HasValueUnfiltered(),
             XhtmlString xhtmlString => xhtmlString.HasValue(),
             string stringValue => stringValue.HasValue(),
             Url url => url.HasValue(),
