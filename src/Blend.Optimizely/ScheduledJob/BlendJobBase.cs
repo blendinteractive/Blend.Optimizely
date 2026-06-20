@@ -234,7 +234,7 @@ namespace Blend.Optimizely.ScheduledJobs
     {
         private readonly string internalPath;
 
-        private const string fileNameFormat = "yyyy-MM-dd-hhmm";
+        private const string fileNameFormat = "yyyy-MM-dd-HHmm";
 
         private const string fileExtension = "txt";
 
