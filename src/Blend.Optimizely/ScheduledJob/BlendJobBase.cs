@@ -24,8 +24,6 @@ namespace Blend.Optimizely.ScheduledJobs
 
         protected readonly IContentRepository contentRepository;
 
-        protected readonly Application application;
-
         protected readonly UrlResolver urlResolver;
 
         protected readonly IBlobFactory blobFactory;
@@ -58,7 +56,6 @@ namespace Blend.Optimizely.ScheduledJobs
             this.contentLoader = locator.GetInstance<IContentLoader>();
             this.contentRepository = locator.GetInstance<IContentRepository>();
             this.contentTypeRepository = locator.GetInstance<IContentTypeRepository>();
-            this.application = locator.GetInstance<Application>();
             this.urlResolver = locator.GetInstance<UrlResolver>();
             this.blobFactory = locator.GetInstance<IBlobFactory>();
             this.mediaDataResolver = locator.GetInstance<ContentMediaResolver>();
