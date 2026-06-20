@@ -1,0 +1,12 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/Tests/">
+    <Project Path="src/Blend.Optimizely.Tests/Blend.Optimizely.Tests.csproj" />
+  </Folder>
+  <Project Path="src/Blend.Optimizely/Blend.Optimizely.csproj" />
+  <Project Path="src/TestSite/TestSite.csproj" />
+</Solution>
