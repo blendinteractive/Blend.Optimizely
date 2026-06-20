@@ -72,7 +72,6 @@ namespace Blend.Optimizely
         /// <returns></returns>
         public static async ValueTask<List<T>> AsContentAsync<T>(this ContentArea? contentArea) where T : IContentData
         {
-            var list = new List<T>();
             var filteredItems = await contentArea.GetFilteredItemsAsync();
             return LoadContentAreaItems<T>(filteredItems);
         }
