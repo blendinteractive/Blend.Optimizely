@@ -14,38 +14,19 @@ namespace Blend.Optimizely.Caching
 
 
         public override TValue? Get<TValue>(string cacheKey) where TValue : class
-        {
-            var cacheObject = objectCacheService.Get(cacheKey);
-            if (cacheObject is null)
-                return default;
-
-            if (cacheObject is TValue castValue)
-                return castValue;
-
-            return default;
-        }
+            => objectCacheService.Get<TValue>(cacheKey, ReadStrategy.Wait);
 
         public override TValue Get<TValue>(string cacheKey, CacheEvictionPolicy cacheEvictionPolicy, Func<TValue> getItemCallback)
-        {
-            TValue? item = Get<TValue>(cacheKey);
-            if (item is not null)
-                return item;
-
-            var updatedItem = getItemCallback();
-            objectCacheService.Insert(cacheKey, updatedItem, cacheEvictionPolicy);
-            return updatedItem;
-        }
+            => objectCacheService.ReadThrough(cacheKey, getItemCallback, _ => cacheEvictionPolicy, ReadStrategy.Wait);
 
         public override TValue Get<TValue, TId>(string cacheKeyFormat, TId id, int durationInMinutes, Func<TId, TValue> getItemCallback)
         {
-            string cacheKey = string.Format(cacheKeyFormat, id);
-            TValue? item = Get<TValue>(cacheKey);
-            if (item is not null)
-                return item;
-
-            var updatedItem = getItemCallback(id);
-            objectCacheService.Insert(cacheKey, updatedItem, new CacheEvictionPolicy(TimeSpan.FromMinutes(durationInMinutes), CacheTimeoutType.Absolute));
-            return updatedItem;
+            string cacheKey = FormatKey(cacheKeyFormat, id);
+            return objectCacheService.ReadThrough(
+                cacheKey,
+                () => getItemCallback(id),
+                _ => new CacheEvictionPolicy(TimeSpan.FromMinutes(durationInMinutes), CacheTimeoutType.Absolute),
+                ReadStrategy.Wait);
         }
 
         public override void Remove(string cacheKey) => objectCacheService.Remove(cacheKey);
