@@ -8,7 +8,7 @@ namespace Blend.Optimizely
 #pragma warning disable CA2225 // Operator overloads have named alternates
         public static implicit operator Result<TValue, TError>(TValue value) => new Result<TValue, TError>(value, default, true);
 
-        public static implicit operator Result<TValue, TError>(TError error) => new Result<TValue, TError>(default, error, true);
+        public static implicit operator Result<TValue, TError>(TError error) => new Result<TValue, TError>(default, error, false);
 #pragma warning restore CA2225 // Operator overloads have named alternates
 
         public bool HasSuccessValue([NotNullWhen(true)] out TValue? value)
