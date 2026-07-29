@@ -37,7 +37,7 @@ namespace Blend.Optimizely
             string stringValue => stringValue.HasValue(),
             Url url => url.HasValue(),
             LinkItemCollection linkItemCollection => linkItemCollection.HasValue(),
-            IEnumerable iEnumerable => iEnumerable.HasValue(),
+            IEnumerable iEnumerable => iEnumerable.Cast<object>().HasValue(),
             LinkItem linkItem => linkItem.HasValue(),
             _ => value != null
         };
